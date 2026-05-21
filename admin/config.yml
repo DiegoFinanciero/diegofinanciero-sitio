@@ -1,0 +1,93 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "img/uploads"
+public_folder: "/img/uploads"
+
+locale: es
+
+collections:
+
+  # ── BLOG ──────────────────────────────────────
+  - name: "blog"
+    label: "📝 Blog"
+    folder: "content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - label: "Categoría"
+        name: "categoria"
+        widget: "select"
+        options:
+          - { label: "Tributación", value: "tributacion" }
+          - { label: "Finanzas PYME", value: "finanzas" }
+          - { label: "Emprendimiento", value: "emprendimiento" }
+          - { label: "Operación Renta", value: "renta" }
+          - { label: "SII", value: "sii" }
+      - { label: "Imagen destacada", name: "imagen", widget: "image", required: false }
+      - { label: "Resumen", name: "resumen", widget: "text", hint: "Máximo 2 líneas. Aparece en la lista de artículos." }
+      - { label: "Contenido", name: "body", widget: "markdown" }
+      - { label: "Publicado", name: "publicado", widget: "boolean", default: true }
+
+  # ── HERRAMIENTAS ──────────────────────────────
+  - name: "herramientas"
+    label: "🛠️ Herramientas"
+    folder: "content/herramientas"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nombre", name: "title", widget: "string" }
+      - { label: "Ícono (emoji)", name: "icono", widget: "string", hint: "Ej: 🧮 📊 💰" }
+      - label: "Tipo"
+        name: "tipo"
+        widget: "select"
+        options:
+          - { label: "Gratis", value: "free" }
+          - { label: "Patreon", value: "pro" }
+          - { label: "Próximamente", value: "soon" }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
+      - { label: "URL o Link", name: "url", widget: "string", required: false, hint: "Si tiene link directo a la herramienta" }
+      - { label: "Orden", name: "orden", widget: "number", default: 99 }
+      - { label: "Activo", name: "activo", widget: "boolean", default: true }
+
+  # ── VIDEOS ────────────────────────────────────
+  - name: "videos"
+    label: "🎬 Videos"
+    folder: "content/videos"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "URL de YouTube", name: "youtube_url", widget: "string", hint: "Ej: https://youtube.com/watch?v=XXXXXX" }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
+      - label: "Categoría"
+        name: "categoria"
+        widget: "select"
+        options:
+          - { label: "Tributación", value: "tributacion" }
+          - { label: "Finanzas", value: "finanzas" }
+          - { label: "Tips", value: "tips" }
+      - { label: "Publicado", name: "publicado", widget: "boolean", default: true }
+
+  # ── PODCAST ───────────────────────────────────
+  - name: "podcast"
+    label: "🎙️ Podcast — A Prueba de Quiebra"
+    folder: "content/podcast"
+    create: true
+    slug: "ep{{numero}}-{{slug}}"
+    fields:
+      - { label: "Número de episodio", name: "numero", widget: "number" }
+      - { label: "Título del episodio", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Invitado/a", name: "invitado", widget: "string", required: false }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
+      - { label: "Duración", name: "duracion", widget: "string", hint: "Ej: 42 min" }
+      - { label: "Link Spotify", name: "spotify", widget: "string", required: false }
+      - { label: "Link Apple Podcasts", name: "apple", widget: "string", required: false }
+      - { label: "Link YouTube", name: "youtube", widget: "string", required: false }
+      - { label: "Publicado", name: "publicado", widget: "boolean", default: true }
+
