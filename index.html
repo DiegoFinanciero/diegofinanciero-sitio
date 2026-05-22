@@ -892,9 +892,9 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
       <p>Los primeros episodios están en producción. Síguenos en redes para ser el primero en enterarte.</p>
     </div>
     <div class="ep-list" id="ep-list-dynamic">
-      <div class="ep-card reveal"><div class="ep-n">01</div><div class="ep-info"><h4>El día que lo perdí todo y volví a empezar</h4><p>Sebastián Morales cuenta cómo sobrevivió una quiebra técnica en su empresa de logística en 2021.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~42 min</div></div>
-      <div class="ep-card reveal delay-1"><div class="ep-n">02</div><div class="ep-info"><h4>Cómo negocié con el SII y salí ganando</h4><p>Una dueña de restaurant revela cómo negoció una deuda millonaria y salvó su negocio.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~38 min</div></div>
-      <div class="ep-card reveal delay-2"><div class="ep-n">03</div><div class="ep-info"><h4>El socio que desapareció y la empresa que sobrevivió</h4><p>Emprendedor del retail cuenta cómo recuperó su empresa después de que su socio se llevara la caja.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~51 min</div></div>
+      <div class="ep-card reveal" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">01</div><div class="ep-info"><h4>El día que lo perdí todo y volví a empezar</h4><p>Sebastián Morales cuenta cómo sobrevivió una quiebra técnica en su empresa de logística en 2021.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~42 min</div></div>
+      <div class="ep-card reveal delay-1" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">02</div><div class="ep-info"><h4>Cómo negocié con el SII y salí ganando</h4><p>Una dueña de restaurant revela cómo negoció una deuda millonaria y salvó su negocio.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~38 min</div></div>
+      <div class="ep-card reveal delay-2" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">03</div><div class="ep-info"><h4>El socio que desapareció y la empresa que sobrevivió</h4><p>Emprendedor del retail cuenta cómo recuperó su empresa después de que su socio se llevara la caja.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~51 min</div></div>
     </div>
   </div>
   <div class="pod-cta">
@@ -1097,6 +1097,28 @@ if(window.netlifyIdentity){
       });
     }
   });
+}
+</script>
+
+<!-- PODCAST SOON TOAST -->
+<div id="podcast-toast" style="
+  display:none;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  background:rgba(255,66,77,0.95);color:#fff;
+  padding:.85rem 2rem;border-radius:100px;
+  font-family:Montserrat,sans-serif;font-weight:700;font-size:.9rem;
+  z-index:9999;box-shadow:0 8px 32px rgba(255,66,77,.4);
+  white-space:nowrap;pointer-events:none;
+  transition:opacity .3s;
+">🎙️ Episodio próximamente — ¡Síguenos para enterarte primero!</div>
+<script>
+function showPodcastSoon(){
+  const t=document.getElementById('podcast-toast');
+  t.style.display='block';t.style.opacity='1';
+  clearTimeout(window._podcastToastTimer);
+  window._podcastToastTimer=setTimeout(()=>{
+    t.style.opacity='0';
+    setTimeout(()=>t.style.display='none',300);
+  },3000);
 }
 </script>
 </body>
