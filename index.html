@@ -874,7 +874,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
       <p class="pod-tagline reveal delay-1">// El podcast de los que resistieron y ganaron //</p>
       <p class="reveal delay-2" style="color:var(--gray);line-height:1.75;font-size:.92rem;max-width:480px">Conversaciones reales con emprendedores que sobrevivieron crisis financieras, deudas, malos socios y el SII — y salieron adelante. Sin filtro.</p>
       <div class="hero-actions reveal delay-3">
-        <button class="btn btn-blue btn-lg">🎙️ Escuchar episodios</button>
+        <button class="btn btn-blue btn-lg" onclick="document.querySelector('.episodes-section').scrollIntoView({behavior:'smooth'})">🎙️ Escuchar episodios</button>
         <button class="btn btn-outline btn-lg" onclick="goTo('home','#contacto')">📩 Ser invitado</button>
       </div>
       <div class="pod-platforms reveal delay-4">
@@ -1009,7 +1009,7 @@ function sendWhatsApp(){
   if(!n){alert('Por favor ingresa tu nombre.');return}
   if(!t){alert('Por favor ingresa tu número de WhatsApp.');return}
   if(!m){alert('Por favor selecciona el motivo de tu consulta.');return}
-  const num='56912345678'; // ← Reemplaza con tu número real
+  const num='56988992768'; // ← Reemplaza con tu número real
   const text=`Hola Diego! Te escribo desde tu sitio web 👋\n\n*Nombre:* ${n}\n*Teléfono:* ${t}\n*Consulta:* ${m}${msg?'\n*Mensaje:* '+msg:''}\n\nQuedo atento/a. ¡Gracias!`;
   window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`,'_blank');
 }
@@ -1056,6 +1056,38 @@ function sendWhatsApp(){
 @keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
 </style>
 
+
+<!-- TOOL MODAL -->
+<div id="tool-modal" style="
+position:fixed;inset:0;z-index:500;
+background:rgba(10,11,20,0.96);backdrop-filter:blur(12px);
+overflow-y:auto;
+">
+<div style="max-width:720px;margin:0 auto;padding:6rem 6% 4rem;position:relative">
+<button onclick="DFContent.closeModal()" style="
+position:fixed;top:1.5rem;right:2rem;
+background:rgba(255,255,255,.1);border:none;
+color:white;font-size:1.5rem;width:44px;height:44px;
+border-radius:50%;cursor:pointer;z-index:501;
+transition:background .2s;
+" onmouseover="this.style.background='rgba(43,78,255,.4)'"
+onmouseout="this.style.background='rgba(255,255,255,.1)'">✕</button>
+<div id="tool-modal-icon" style="font-size:3rem;margin-bottom:1rem"></div>
+<h1 id="tool-modal-title" style="font-family:Montserrat,sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.1;margin-bottom:2rem"></h1>
+<div id="tool-modal-body" style="
+font-size:1rem;line-height:1.8;color:#c8cce0;
+"></div>
+<div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)">
+<button class="btn btn-blue btn-lg" onclick="DFContent.closeModal();goTo('home','#contacto')">
+💬 Consultar con Diego
+</button>
+</div>
+</div>
+</div>
+<style>
+#tool-modal{display:none}
+#tool-modal.open{display:block}
+</style>
 <script>
 if(window.netlifyIdentity){
   window.netlifyIdentity.on("init",u=>{
