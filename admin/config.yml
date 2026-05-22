@@ -15,6 +15,7 @@ collections:
     folder: "content/blog"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "/blog/{{slug}}"
     fields:
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
@@ -49,7 +50,7 @@ collections:
           - { label: "Patreon", value: "pro" }
           - { label: "Próximamente", value: "soon" }
       - { label: "Descripción", name: "descripcion", widget: "text" }
-      - { label: "URL o Link", name: "url", widget: "string", required: false, hint: "Si tiene link directo a la herramienta" }
+      - { label: "URL o Link", name: "url", widget: "string", required: false }
       - { label: "Orden", name: "orden", widget: "number", default: 99 }
       - { label: "Activo", name: "activo", widget: "boolean", default: true }
 
@@ -62,7 +63,7 @@ collections:
     fields:
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
-      - { label: "URL de YouTube", name: "youtube_url", widget: "string", hint: "Ej: https://youtube.com/watch?v=XXXXXX" }
+      - { label: "URL de YouTube", name: "youtube_url", widget: "string" }
       - { label: "Descripción", name: "descripcion", widget: "text" }
       - label: "Categoría"
         name: "categoria"
@@ -78,7 +79,7 @@ collections:
     label: "🎙️ Podcast — A Prueba de Quiebra"
     folder: "content/podcast"
     create: true
-    slug: "ep{{numero}}-{{slug}}"
+    slug: "ep{{fields.numero}}-{{slug}}"
     fields:
       - { label: "Número de episodio", name: "numero", widget: "number" }
       - { label: "Título del episodio", name: "title", widget: "string" }
@@ -90,4 +91,3 @@ collections:
       - { label: "Link Apple Podcasts", name: "apple", widget: "string", required: false }
       - { label: "Link YouTube", name: "youtube", widget: "string", required: false }
       - { label: "Publicado", name: "publicado", widget: "boolean", default: true }
-
