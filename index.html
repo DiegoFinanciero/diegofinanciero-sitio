@@ -7,6 +7,7 @@
 <meta name="description" content="Diego Financiero — Asesor Financiero y Tributario para emprendedores y PYME chilenas. Tributación SII, planificación financiera, educación financiera.">
 <link rel="preload" as="image" href="img/foto.jpg">
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="/content-loader.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -801,7 +802,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
     <h1 class="display-2 reveal delay-1" style="margin-bottom:1.25rem">Aplicaciones<br>para tu negocio.</h1>
     <p class="body-lg reveal delay-2">Calculadoras, simuladores y apps diseñadas para emprendedores chilenos. Algunas gratuitas, otras para miembros Patreon.</p>
   </div>
-  <div class="tools-grid">
+  <div class="tools-grid" id="tools-grid-dynamic">
     <div class="tool-cell reveal"><span class="tool-badge free">Gratis</span><div class="tool-icon-lg">🧮</div><h3>Calculadora de IVA</h3><p>Calcula el IVA de tus boletas y facturas al instante. Neto, bruto y el 19% desglosado.</p><button class="btn-ghost">Usar ahora →</button></div>
     <div class="tool-cell reveal delay-1"><span class="tool-badge free">Gratis</span><div class="tool-icon-lg">📅</div><h3>Calendario Tributario</h3><p>Todas las fechas clave del SII. F29, F22, PPM y más. Nunca más una multa por atraso.</p><button class="btn-ghost">Ver calendario →</button></div>
     <div class="tool-cell reveal delay-2"><span class="tool-badge pro">Patreon</span><div class="tool-icon-lg">💰</div><h3>Simulador de Renta</h3><p>Simula tu declaración de renta antes de presentarla al SII y evita sorpresas.</p><button class="btn-ghost" onclick="goTo('home','#redes')">Ver en Patreon →</button></div>
@@ -890,7 +891,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
       <h3>🚀 Lanzamiento próximo</h3>
       <p>Los primeros episodios están en producción. Síguenos en redes para ser el primero en enterarte.</p>
     </div>
-    <div class="ep-list">
+    <div class="ep-list" id="ep-list-dynamic">
       <div class="ep-card reveal"><div class="ep-n">01</div><div class="ep-info"><h4>El día que lo perdí todo y volví a empezar</h4><p>Sebastián Morales cuenta cómo sobrevivió una quiebra técnica en su empresa de logística en 2021.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~42 min</div></div>
       <div class="ep-card reveal delay-1"><div class="ep-n">02</div><div class="ep-info"><h4>Cómo negocié con el SII y salí ganando</h4><p>Una dueña de restaurant revela cómo negoció una deuda millonaria y salvó su negocio.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~38 min</div></div>
       <div class="ep-card reveal delay-2"><div class="ep-n">03</div><div class="ep-info"><h4>El socio que desapareció y la empresa que sobrevivió</h4><p>Emprendedor del retail cuenta cómo recuperó su empresa después de que su socio se llevara la caja.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~51 min</div></div>
@@ -928,7 +929,10 @@ function navTab(p){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   const map={home:'tab-home',apps:'tab-apps',podcast:'tab-podcast','blog-page':'tab-blog'};
   if(map[p]) document.getElementById(map[p]).classList.add('active');
-  if(p==='blog-page') loadBlog('blog-grid-full', 99);
+  // Load dynamic content per page
+  if(p==='blog-page') DFContent.loadBlog('blog-grid-full', 99);
+  if(p==='podcast') DFContent.loadEpisodes('ep-list-dynamic');
+  if(p==='apps') DFContent.loadTools('tools-grid-dynamic');
 }
 function goTo(p,hash){
   showPage(p);
@@ -1010,6 +1014,48 @@ function sendWhatsApp(){
   window.open(`https://wa.me/${num}?text=${encodeURIComponent(text)}`,'_blank');
 }
 </script>
+<!-- BLOG MODAL -->
+<div id="blog-modal" style="
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(10,11,20,0.96);backdrop-filter:blur(12px);
+  overflow-y:auto;
+">
+  <div style="max-width:720px;margin:0 auto;padding:6rem 6% 4rem;position:relative">
+    <button onclick="DFContent.closeModal()" style="
+      position:fixed;top:1.5rem;right:2rem;
+      background:rgba(255,255,255,.1);border:none;
+      color:white;font-size:1.5rem;width:44px;height:44px;
+      border-radius:50%;cursor:pointer;z-index:501;
+      transition:background .2s;
+    " onmouseover="this.style.background='rgba(43,78,255,.4)'"
+       onmouseout="this.style.background='rgba(255,255,255,.1)'">✕</button>
+    <span id="modal-cat" style="font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:.75rem"></span>
+    <h1 id="modal-title" style="font-family:Montserrat,sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.1;margin-bottom:.75rem"></h1>
+    <span id="modal-date" style="font-size:.82rem;color:var(--gray);display:block;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.1)"></span>
+    <div id="modal-body" style="
+      font-size:1rem;line-height:1.8;color:#c8cce0;
+    "></div>
+    <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)">
+      <button class="btn btn-blue btn-lg" onclick="DFContent.closeModal();goTo('home','#contacto')">
+        💬 Consultar con Diego
+      </button>
+    </div>
+  </div>
+</div>
+<style>
+#blog-modal{display:none}
+#blog-modal.open{display:block}
+#blog-modal #modal-body h2{font-family:Montserrat,sans-serif;font-size:1.4rem;font-weight:800;margin:2rem 0 .75rem;color:white}
+#blog-modal #modal-body h3{font-family:Montserrat,sans-serif;font-size:1.1rem;font-weight:700;margin:1.5rem 0 .5rem;color:white}
+#blog-modal #modal-body p{margin-bottom:1rem}
+#blog-modal #modal-body ul{margin:.75rem 0 1rem 1.5rem}
+#blog-modal #modal-body li{margin-bottom:.4rem}
+#blog-modal #modal-body strong{color:white;font-weight:700}
+#blog-modal #modal-body blockquote{border-left:3px solid var(--cyan);padding-left:1rem;color:var(--gray);font-style:italic;margin:1.5rem 0}
+.loading-dots::after{content:'...';animation:dots 1.5s infinite}
+@keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+</style>
+
 <script>
 if(window.netlifyIdentity){
   window.netlifyIdentity.on("init",u=>{
