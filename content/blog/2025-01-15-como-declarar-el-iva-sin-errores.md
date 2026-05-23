@@ -27,9 +27,7 @@ Imagina que vas a una primera cita. Quieres causar la mejor impresión posible, 
 
 Bueno, cuando vas al banco a pedir un crédito sin educación financiera, eso es exactamente lo que estás haciendo sin darte cuenta. El ejecutivo bancario no te rechaza porque te tenga mala; te rechaza porque no entiende tus números. Él no se enamora de tu idea de negocio ni de tus ganas de triunfar; él se enamora de tu capacidad de pago documentada.
 
-Aprender educación financiera básica es, literalmente, aprender a hablar el idioma del banco. Mira la diferencia en esta tabla:
-
-![](/img/uploads/captura-de-pantalla-2026-05-22-200241.png)
+![Aprender educación financiera básica es, literalmente, aprender a hablar el idioma del banco. Mira la diferencia en esta tabla:](/img/uploads/captura-de-pantalla-2026-05-22-200241.png)
 
 ## El Banco no es el Enemigo, es una Palanca de Construcción
 
