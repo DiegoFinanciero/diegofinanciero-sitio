@@ -43,9 +43,11 @@ Aquí llegamos al punto más importante de la salud financiera: la separación d
 
 Para construir una muralla china entre tu patrimonio personal y el riesgo de tu negocio, tienes que aplicar estas tres reglas de oro desde mañana mismo:
 
-* Págate un sueldo de mercado: Deja de "sacar de la caja" lo que necesitas para el supermercado o el dividendo de la casa. Defínete un sueldo fijo. Si tu empresa no puede pagarle un sueldo a su gerente (que eres tú), entonces tienes un pasatiempo caro, no un negocio.
-* Cuentas corrientes separadas (¡Por favor!): No uses la cuenta RUT de la empresa para comprar el regalo de cumpleaños de tu hijo, ni tu tarjeta de crédito personal para comprar stock. El desorden cosmético en las cuentas es la primera bandera roja para cualquier analista de riesgo.
-* Construye el historial de la Empresa (RUT Jurídico): Saca los créditos a nombre de tu SpA o SRL, no a tu nombre de persona natural. Usa las herramientas del Estado como el FOGAPE, donde el aval principal es una garantía estatal y no tu casa o tu auto familiar. De esta forma, si el negocio llega a enfrentar una tormenta perfecta, tu patrimonio personal estará a salvo en la orilla.
+**\- Págate un sueldo de mercado:** Deja de "sacar de la caja" lo que necesitas para el supermercado o el dividendo de la casa. Defínete un sueldo fijo. Si tu empresa no puede pagarle un sueldo a su gerente (que eres tú), entonces tienes un pasatiempo caro, no un negocio.
+
+**\- Cuentas corrientes separadas (¡Por favor!):** No uses la cuenta RUT de la empresa para comprar el regalo de cumpleaños de tu hijo, ni tu tarjeta de crédito personal para comprar stock. El desorden cosmético en las cuentas es la primera bandera roja para cualquier analista de riesgo.
+
+**\- Construye el historial de la Empresa (RUT Jurídico):** Saca los créditos a nombre de tu SpA o SRL, no a tu nombre de persona natural. Usa las herramientas del Estado como el FOGAPE, donde el aval principal es una garantía estatal y no tu casa o tu auto familiar. De esta forma, si el negocio llega a enfrentar una tormenta perfecta, tu patrimonio personal estará a salvo en la orilla.
 
 ## Conclusión: Toma el Control del Volante
 
