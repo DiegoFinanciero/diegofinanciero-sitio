@@ -1,9 +1,11 @@
 ---
-title: "Calculadora de IVA"
-icono: "🧮"
-tipo: "free"
-descripcion: "Calcula el IVA de tus boletas y facturas al instante. Ingresa el monto bruto o neto y obtén el desglose del 19% automáticamente."
-url: ""
+title: Punto de Equilibrio
+icono: 🧮
+tipo: free
+descripcion: ¿Sabes exactamente cuánto tienes que vender para no perder plata?
+  Calcula tu punto de equilibrio en 2 minutos y descubre qué tan lejos —o cerca—
+  estás de la rentabilidad real.
+url: https://punto-equilibrio-df.web.app/
 orden: 1
 activo: true
 ---
