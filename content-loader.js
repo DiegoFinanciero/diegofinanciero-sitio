@@ -112,19 +112,24 @@ ${t.url
 // ── Render episode cards ─────────────────────────────────────────────────
 function renderEpisodeCards(eps) {
 if (!eps.length) return '';
-return eps.sort((a,b) => (a.numero||0)-(b.numero||0)).map(e => `
-<div class="ep-card reveal" ${(e.spotify||e.apple||e.youtube) ? 'onclick="DFContent.openEpisode(\'' + encodeURIComponent(JSON.stringify(e)) + '\')" style="cursor:pointer"' : ''}>
+return eps.sort((a,b) => (a.numero||0)-(b.numero||0)).map(e => {
+const link = e.youtube || e.spotify || e.apple || '';
+const label = e.youtube ? '▶️ Ver en YouTube' : '🎧 Escuchar';
+const inner = `
 <div class="ep-n">${String(e.numero||'?').padStart(2,'0')}</div>
 <div class="ep-info">
 <h4>${e.title}</h4>
 <p>${e.descripcion || ''}${e.invitado ? ' <em>· ' + e.invitado + '</em>' : ''}</p>
 </div>
 <div class="ep-meta">
-<span class="ep-badge">${(e.spotify||e.apple||e.youtube) ? '🎧 Escuchar' : 'Próximamente'}</span>
+${link ? '<span class="ep-yt">' + label + '</span>' : '<span class="ep-badge">Próximamente</span>'}
 ${e.duracion || ''}
 </div>
-</div>
-`).join('');
+`;
+return link
+? `<a class="ep-card reveal" href="${link}" target="_blank" rel="noopener">${inner}</a>`
+: `<div class="ep-card reveal">${inner}</div>`;
+}).join('');
 }
 
 // ── Open blog post in modal ──────────────────────────────────────────────
