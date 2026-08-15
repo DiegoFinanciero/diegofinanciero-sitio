@@ -548,13 +548,19 @@ table td.negative-cell {
 .print-only { display: none; }
 
 @media print {
+  html, body { min-height: 0 !important; height: auto !important; }
+  body > header.topbar,
+  body > nav.steps-nav,
+  body > main.wizard-main,
+  body > footer.wizard-footer,
+  body > .modal-overlay {
+    display: none !important;
+  }
   body * { visibility: hidden; }
   .print-only, .print-only * { visibility: visible; }
   .print-only {
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: static;
     width: 100%;
   }
   .print-header h1 { font-size: 1.4rem; margin: 0 0 0.2rem; }
