@@ -1,0 +1,2543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MiniPlan de Negocio</title>
+<style>
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --border: #e2e5ea;
+  --text: #1c2230;
+  --text-muted: #626b7a;
+  --primary: #2f5fdb;
+  --primary-hover: #2450bd;
+  --danger: #c8402c;
+  --danger-bg: #fdeceb;
+  --warn: #a5690a;
+  --warn-bg: #fdf3e2;
+  --info: #2b6cb0;
+  --info-bg: #e9f2fc;
+  --ok: #1c8a53;
+  --ok-bg: #e7f7ee;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 24, 33, 0.08), 0 1px 2px rgba(20, 24, 33, 0.06);
+}
+
+:root[data-theme="dark"] {
+  --bg: #14171f;
+  --surface: #1c2029;
+  --border: #2b303c;
+  --text: #eaecf1;
+  --text-muted: #a0a7b6;
+  --primary: #6d93f5;
+  --primary-hover: #86a5f7;
+  --danger: #ef6a58;
+  --danger-bg: #3a2220;
+  --warn: #e0a63f;
+  --warn-bg: #392f1a;
+  --info: #6fb1f0;
+  --info-bg: #1c2c3d;
+  --ok: #4fd48a;
+  --ok-bg: #17301f;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171f;
+    --surface: #1c2029;
+    --border: #2b303c;
+    --text: #eaecf1;
+    --text-muted: #a0a7b6;
+    --primary: #6d93f5;
+    --primary-hover: #86a5f7;
+    --danger: #ef6a58;
+    --danger-bg: #3a2220;
+    --warn: #e0a63f;
+    --warn-bg: #392f1a;
+    --info: #6fb1f0;
+    --info-bg: #1c2c3d;
+    --ok: #4fd48a;
+    --ok-bg: #17301f;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  min-height: 100vh;
+}
+
+button, input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbar-left, .topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.nombre-negocio-input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  background: var(--bg);
+  color: var(--text);
+  min-width: 220px;
+}
+
+.btn-primary, .btn-secondary, .btn-icon, .btn-add {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--bg); }
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+}
+
+.btn-add {
+  background: var(--info-bg);
+  color: var(--info);
+  border: 1px dashed var(--info);
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.btn-remove-row {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.steps-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.step-item .step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.step-item.active {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--info-bg);
+}
+.step-item.active .step-num { background: var(--primary); color: #fff; }
+
+.step-item.done .step-num { background: var(--ok); color: #fff; }
+
+.step-item.has-error .step-num { background: var(--danger); color: #fff; }
+
+.wizard-main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 6rem;
+}
+
+.step-panel.hidden { display: none; }
+.hidden { display: none; }
+
+.step-header h1 {
+  font-size: 1.3rem;
+  margin: 0 0 0.35rem;
+}
+
+.step-help {
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+  line-height: 1.45;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.card-title .hint {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+}
+
+.field-grid label, .inline-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.card-footer {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--border);
+}
+
+input[type="number"], input[type="text"] {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.input-money, .input-small { width: 100%; }
+
+.dyn-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dyn-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.dyn-row.productos {
+  grid-template-columns: 1.6fr 0.9fr 0.9fr 0.9fr auto;
+}
+
+.dyn-row-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.dyn-header {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr auto;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 0 0 0.1rem;
+}
+
+.dyn-header.productos {
+  grid-template-columns: 1.6fr 0.9fr 0.9fr 0.9fr auto;
+}
+
+.anios-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.6rem;
+}
+
+.anios-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.totals-card {
+  background: var(--info-bg);
+  border: 1px solid var(--info);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+.totals-card strong { color: var(--info); }
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.msg {
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+.msg.error { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+.msg.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+.msg.info { background: var(--info-bg); color: var(--info); border-color: var(--info); }
+
+.tax-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.85rem;
+  min-width: 620px;
+}
+
+table th, table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+table th:first-child, table td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: normal;
+}
+
+table thead th {
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+
+table tr.total-row td {
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+}
+
+table tr.negative td {
+  color: var(--danger);
+}
+
+table td.negative-cell {
+  color: var(--danger);
+}
+
+.wizard-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.footer-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.3rem 1.4rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.modal-box p {
+  margin: 0 0 1.1rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.informe-card { border-color: var(--primary); }
+
+.informe-section { margin-top: 1.1rem; }
+
+.informe-section h3 {
+  font-size: 0.95rem;
+  margin: 0 0 0.4rem;
+  color: var(--primary);
+}
+
+.informe-section p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.informe-section ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.informe-section li { margin-bottom: 0.4rem; }
+
+.informe-section code {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.85em;
+}
+
+.info-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.info-tip.hidden { display: none; }
+
+.info-tip .tip-bubble {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  bottom: 135%;
+  right: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  width: 260px;
+  box-shadow: var(--shadow);
+  transition: opacity 0.15s ease;
+  z-index: 50;
+  text-align: left;
+  font-weight: 400;
+}
+
+.info-tip:hover .tip-bubble,
+.info-tip:focus .tip-bubble,
+.info-tip:focus-within .tip-bubble {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Vista imprimible / PDF */
+.print-only { display: none; }
+
+@media print {
+  body * { visibility: hidden; }
+  .print-only, .print-only * { visibility: visible; }
+  .print-only {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .print-header h1 { font-size: 1.4rem; margin: 0 0 0.2rem; }
+  .print-header .print-date { color: #555; font-size: 0.85rem; margin: 0 0 1.2rem; }
+  .print-only h2 { font-size: 1.05rem; margin: 1.4rem 0 0.5rem; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; }
+  .print-only table { border-collapse: collapse; width: 100%; font-size: 0.8rem; margin-bottom: 0.6rem; }
+  .print-only th, .print-only td { border-bottom: 1px solid #ddd; padding: 0.3rem 0.4rem; text-align: right; }
+  .print-only th:first-child, .print-only td:first-child { text-align: left; }
+  .print-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1.5rem; font-size: 0.85rem; margin-bottom: 0.5rem; }
+  .print-only .print-informe h3 { font-size: 0.9rem; margin: 0.9rem 0 0.3rem; }
+  .print-only .print-informe p, .print-only .print-informe li { font-size: 0.82rem; line-height: 1.45; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo">📊 MiniPlan de Negocio</span>
+      <input type="text" id="nombreNegocio" class="nombre-negocio-input" placeholder="Nombre de tu negocio" />
+    </div>
+    <div class="topbar-right">
+      <button id="btnTema" class="btn-icon" title="Cambiar tema">🌙</button>
+      <button id="btnNuevo" class="btn-secondary">Nuevo plan</button>
+      <button id="btnEjemplo" class="btn-secondary">Cargar ejemplo</button>
+      <button id="btnImportar" class="btn-secondary">Importar</button>
+      <input type="file" id="inputImportar" accept="application/json" hidden />
+      <button id="btnExportarPDF" class="btn-secondary">Exportar PDF</button>
+      <button id="btnExportar" class="btn-primary">Exportar / Guardar</button>
+      <span class="info-tip" tabindex="0">ⓘ<span class="tip-bubble"><strong>Exportar / Guardar (.json)</strong> es para retomar este plan más tarde en esta misma app — no está pensado para compartir. Para mostrar o enviar el plan a alguien, usa <strong>Exportar PDF</strong>.</span></span>
+    </div>
+  </header>
+
+  <nav class="steps-nav" id="stepsNav">
+    <div class="step-item" data-step="1"><span class="step-num">1</span><span class="step-label">Inversión</span></div>
+    <div class="step-item" data-step="2"><span class="step-num">2</span><span class="step-label">Financiación</span></div>
+    <div class="step-item" data-step="3"><span class="step-num">3</span><span class="step-label">Gastos</span></div>
+    <div class="step-item" data-step="4"><span class="step-num">4</span><span class="step-label">Ventas</span></div>
+    <div class="step-item" data-step="5"><span class="step-num">5</span><span class="step-label">Resultados</span></div>
+  </nav>
+
+  <main class="wizard-main">
+
+    <!-- PASO 1: INVERSIONES -->
+    <section class="step-panel" id="panel-1">
+      <div class="step-header">
+        <h1>Paso 1 · ¿Qué necesito para montar el negocio?</h1>
+        <p class="step-help">Registra todo lo que debes comprar o pagar antes de abrir: activos que usarás varios años (mobiliario, equipos, vehículos...) y gastos/stock inicial que se consumen desde el día uno.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Inversiones en activos <span class="hint">(mobiliario, maquinaria, equipos, vehículos, licencias...)</span></div>
+        <div id="tablaActivos" class="dyn-table"></div>
+        <button class="btn-add" id="btnAddActivo">+ Agregar activo</button>
+        <div class="card-footer">
+          <label class="inline-label">Vida útil promedio de los activos (años, para calcular depreciación)</label>
+          <input type="number" min="0" id="vidaUtilAnios" class="input-small" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Gastos y provisiones de inicio</div>
+        <div class="field-grid">
+          <label>Stock inicial <input type="number" min="0" id="stockInicial" class="input-money" /></label>
+          <label>Gastos legales de constitución <input type="number" min="0" id="gastosConstitucion" class="input-money" /></label>
+          <label>Gastos de lanzamiento (marketing inicial) <input type="number" min="0" id="gastosLanzamiento" class="input-money" /></label>
+          <label>Otros gastos de establecimiento <input type="number" min="0" id="otrosGastos" class="input-money" /></label>
+          <label>Fondo de reserva para imprevistos
+            <span class="info-tip" tabindex="0">ⓘ<span class="tip-bubble">Este monto se financia pero <strong>no se gasta automáticamente</strong>: queda como caja disponible (un colchón) salvo que realmente lo necesites. No reduce la utilidad del año 1.</span></span>
+            <input type="number" min="0" id="fondoImprevistos" class="input-money" />
+          </label>
+        </div>
+      </div>
+
+      <div class="totals-card" id="totalesPaso1"></div>
+      <div class="messages" id="msgs-1"></div>
+    </section>
+
+    <!-- PASO 2: FINANCIACIÓN -->
+    <section class="step-panel hidden" id="panel-2">
+      <div class="step-header">
+        <h1>Paso 2 · ¿De dónde saldrá el dinero?</h1>
+        <p class="step-help">Define cómo cubrirás la inversión total del Paso 1: capital propio, préstamo, o una combinación de ambos.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fuentes de financiación</div>
+        <div class="field-grid">
+          <label>Aportaciones de los socios <input type="number" min="0" id="aportacionesSocios" class="input-money" /></label>
+          <label>Monto del préstamo <input type="number" min="0" id="prestamo" class="input-money" /></label>
+          <label>Plazo del préstamo (años) <input type="number" min="0" id="anios" class="input-small" /></label>
+          <label>Tipo de interés anual (%) <input type="number" min="0" step="0.1" id="tipoInteres" class="input-small" /></label>
+        </div>
+      </div>
+
+      <div class="totals-card" id="totalesPaso2"></div>
+      <div class="messages" id="msgs-2"></div>
+    </section>
+
+    <!-- PASO 3: GASTOS -->
+    <section class="step-panel hidden" id="panel-3">
+      <div class="step-header">
+        <h1>Paso 3 · ¿Cuáles son los gastos del negocio?</h1>
+        <p class="step-help">Estima los gastos operativos mensuales (año 1) y su variación anual, y proyecta tu plantilla de personal para los 5 años.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Gastos operativos mensuales</div>
+        <div id="tablaGastosOp" class="dyn-table"></div>
+        <button class="btn-add" id="btnAddGasto">+ Agregar gasto</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Gastos de personal</div>
+        <div class="field-grid">
+          <label>Sueldo bruto mensual promedio (año 1) <input type="number" min="0" id="sueldoMensual" class="input-money" /></label>
+          <label>Variación anual del sueldo (%) <input type="number" min="0" step="0.1" id="variacionSueldoAnual" class="input-small" /></label>
+          <label>Costos de empleador adicionales, ej. cargas sociales (%)
+            <span class="info-tip" tabindex="0">ⓘ<span class="tip-bubble">21% es un valor de referencia genérico, no un dato oficial. Varía según régimen tributario, tipo de contrato y mutual de seguridad. <strong>Confírmalo con tu contador</strong> antes de usarlo para decisiones reales.</span></span>
+            <input type="number" min="0" step="0.1" id="pctCosteEmpresa" class="input-small" />
+          </label>
+        </div>
+        <div class="card-title" style="margin-top:1rem">Número de empleados por año</div>
+        <div class="anios-grid" id="empleadosPorAnio"></div>
+      </div>
+
+      <div class="totals-card" id="totalesPaso3"></div>
+      <div class="messages" id="msgs-3"></div>
+    </section>
+
+    <!-- PASO 4: VENTAS -->
+    <section class="step-panel hidden" id="panel-4">
+      <div class="step-header">
+        <h1>Paso 4 · ¿Cuánto voy a vender e ingresar?</h1>
+        <p class="step-help">Agrega tus productos o servicios con su precio y margen bruto, y la cantidad estimada de unidades del año 1.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Variación anual de precios (aplica a todos los productos)</div>
+        <label class="inline-label">% variación anual de precio <input type="number" step="0.1" id="variacionPrecioAnual" class="input-small" /></label>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Productos / Servicios</div>
+        <div id="tablaProductos" class="dyn-table"></div>
+        <button class="btn-add" id="btnAddProducto">+ Agregar producto o servicio</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Meta de crecimiento de ventas por año <span class="hint">(en unidades, aplica por igual a todos los productos)</span></div>
+        <p class="step-help" style="margin-bottom:0.9rem">Define cuánto quieres crecer cada año respecto al anterior. Una meta sostenible suele ser más agresiva al inicio (base de ventas chica) y bajar con el tiempo — no un mismo % fijo todos los años.</p>
+        <div class="anios-grid" id="metaCrecimiento"></div>
+        <button class="btn-add" id="btnSugerirCrecimiento">✨ Sugerir crecimiento sostenible (20% → 15% → 12% → 10%)</button>
+      </div>
+
+      <div class="totals-card" id="totalesPaso4"></div>
+      <div class="messages" id="msgs-4"></div>
+    </section>
+
+    <!-- PASO 5: RESULTADOS -->
+    <section class="step-panel hidden" id="panel-5">
+      <div class="step-header">
+        <h1>Paso 5 · Resultados del plan</h1>
+        <p class="step-help">Proyección a 5 años: Pérdidas y Ganancias, Flujo de Caja y Balance, con las mismas advertencias que aplicaría un asesor financiero.</p>
+      </div>
+
+      <div class="tax-row card">
+        <label class="inline-label">Tasa de impuesto a la renta (%) <input type="number" min="0" step="0.1" id="tasaImpuesto" class="input-small" /></label>
+        <label class="inline-label">Días de crédito a clientes <input type="number" min="0" id="diasCobro" class="input-small" /></label>
+        <label class="inline-label">Días de crédito de proveedores <input type="number" min="0" id="diasPago" class="input-small" /></label>
+        <label class="inline-label">% de utilidad repartida en dividendos <input type="number" min="0" step="0.1" id="pctDividendos" class="input-small" /></label>
+      </div>
+
+      <div class="messages">
+        <div class="msg info">ℹ️ Todos los montos de este plan se consideran <strong>netos de IVA</strong> (sin IVA incluido). El modelo no proyecta el flujo de caja del IVA (débito/crédito fiscal ni su pago mensual) — solo resultado e impuesto a la renta. Si tu negocio maneja plazos de pago/cobro largos, el IVA puede generar desfases de caja adicionales a los que sí modela este plan; conversa ese detalle con tu contador.</div>
+      </div>
+
+      <div class="messages" id="msgs-5-general"></div>
+
+      <div class="card">
+        <div class="card-title">Pérdidas y Ganancias previstas</div>
+        <div class="table-scroll"><table id="tablaPG"></table></div>
+        <div class="messages" id="msgs-5-pg"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cash Flow estimado</div>
+        <div class="table-scroll"><table id="tablaCF"></table></div>
+        <div class="messages" id="msgs-5-cf"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Balances previsionales</div>
+        <div class="table-scroll"><table id="tablaBal"></table></div>
+        <div class="messages" id="msgs-5-bal"></div>
+      </div>
+
+      <div class="card informe-card">
+        <div class="card-title">📋 Informe: cómo usar este plan</div>
+
+        <div id="informeResumen" class="totals-card"></div>
+
+        <div class="informe-section">
+          <h3>¿Para qué sirve este modelo?</h3>
+          <p>Es una simulación financiera rápida, no un plan de negocios completo. Su objetivo es dar una primera validación —con las mismas alertas que daría un asesor— para decidir con más información si conviene seguir adelante, ajustar el modelo de negocio o buscar más financiamiento <strong>antes de comprometer inversión real</strong>.</p>
+        </div>
+
+        <div class="informe-section">
+          <h3>¿Cómo se aplica?</h3>
+          <ul>
+            <li>Contrasta cada supuesto con tu realidad: ¿las ventas estimadas son alcanzables con tu capacidad real de producción o atención?, ¿los márgenes son los que realmente maneja tu rubro?</li>
+            <li>Usa el Cash Flow y el Balance para verificar que el negocio no se quede sin caja en ningún año — eso es más urgente que la rentabilidad contable.</li>
+            <li>Es una herramienta iterativa: ajusta un supuesto a la vez (precio, dotación, gastos) y vuelve a mirar el impacto en Resultados antes de decidir.</li>
+          </ul>
+        </div>
+
+        <div class="informe-section">
+          <h3>Seguimiento futuro (para que tenga sentido en el tiempo)</h3>
+          <ul>
+            <li>Vuelve a este plan cada 3-6 meses y compara lo real contra lo proyectado (ventas, gastos, caja).</li>
+            <li>Cuando el negocio ya esté operando, reemplaza el año en curso por cifras reales y re-proyecta los años siguientes desde ahí — el plan debe "perseguir" la realidad, no quedarse fijo en la versión inicial.</li>
+            <li>Exporta una versión <code>.json</code> por período (por ejemplo cada trimestre) para conservar un historial y ver cómo evolucionan tus propios supuestos.</li>
+          </ul>
+        </div>
+
+        <div class="informe-section">
+          <h3>Consejos generales</h3>
+          <ul>
+            <li>Sé conservador al proyectar ventas y generoso al proyectar gastos e imprevistos — es el error más común al armar un plan nuevo.</li>
+            <li>Presta especial atención a los años donde cambia la dotación de personal: suelen ser los que más generan pérdidas o caja negativa inesperadas.</li>
+            <li>Si una advertencia en rojo aparece (caja negativa, financiación insuficiente, datos faltantes), no la ignores: resuélvela en el modelo antes de resolverla con dinero real.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="wizard-footer">
+    <button id="btnAtras" class="btn-secondary">← Atrás</button>
+    <span id="footerHint" class="footer-hint"></span>
+    <span class="info-tip hidden" id="footerExportTip" tabindex="0">ⓘ<span class="tip-bubble"><strong>Esto exporta un .json</strong> para retomar el plan más tarde en esta app. Para compartir el plan con alguien, usa <strong>Exportar PDF</strong> en la barra superior.</span></span>
+    <button id="btnSiguiente" class="btn-primary">Siguiente →</button>
+  </footer>
+
+  <div class="modal-overlay hidden" id="modalConfirm">
+    <div class="modal-box">
+      <p id="modalConfirmText"></p>
+      <div class="modal-actions">
+        <button id="modalConfirmCancel" class="btn-secondary">Cancelar</button>
+        <button id="modalConfirmOk" class="btn-primary">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="print-only" id="printView"></div>
+
+  <script>
+/* ---- calc.js ---- */
+/**
+ * Motor de cálculo del MiniPlan de Negocio.
+ * Reproduce la lógica del libro Excel "MiniPlan de Negocio" (A.D. Esteve):
+ * Paso 1 Inversiones -> Paso 2 Financiación -> Paso 3 Gastos -> Paso 4 Ventas
+ * -> Resultados (P&G) -> Cash Flow -> Balance.
+ *
+ * Todas las funciones son puras: reciben el estado del plan y devuelven
+ * estructuras calculadas, sin tocar el DOM.
+ */
+
+const N_YEARS = 5;
+
+function range(n) {
+  return Array.from({ length: n }, (_, i) => i);
+}
+
+/* ---------------------------------------------------------------------- */
+/* PASO 1: INVERSIONES                                                    */
+/* ---------------------------------------------------------------------- */
+
+function calcInversiones(plan) {
+  const activos = plan.inversiones.activos || [];
+  const totalActivos = activos.reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
+
+  const gastosInicio = plan.inversiones.gastosInicio || {};
+  const stockInicial = Number(gastosInicio.stockInicial) || 0;
+  const gastosConstitucion = Number(gastosInicio.gastosConstitucion) || 0;
+  const gastosLanzamiento = Number(gastosInicio.gastosLanzamiento) || 0;
+  const otrosGastos = Number(gastosInicio.otrosGastos) || 0;
+  const fondoImprevistos = Number(gastosInicio.fondoImprevistos) || 0;
+
+  const totalGastosProvisiones =
+    stockInicial + gastosConstitucion + gastosLanzamiento + otrosGastos + fondoImprevistos;
+
+  const totalInversion = totalActivos + totalGastosProvisiones;
+
+  return {
+    activos,
+    totalActivos,
+    stockInicial,
+    gastosConstitucion,
+    gastosLanzamiento,
+    otrosGastos,
+    fondoImprevistos,
+    totalGastosProvisiones,
+    totalInversion,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* PASO 2: FINANCIACIÓN                                                   */
+/* ---------------------------------------------------------------------- */
+
+function calcFinanciacion(plan, inversiones) {
+  const f = plan.financiacion || {};
+  const aportacionesSocios = Number(f.aportacionesSocios) || 0;
+  const prestamo = Number(f.prestamo) || 0;
+  const anios = Number(f.anios) || 0;
+  const tipoInteres = Number(f.tipoInteres) || 0; // fracción, ej. 0.06
+
+  const totalFinanciacion = aportacionesSocios + prestamo;
+  const coberturaPct = inversiones.totalInversion > 0 ? totalFinanciacion / inversiones.totalInversion : 1;
+  const faltante = Math.max(0, inversiones.totalInversion - totalFinanciacion);
+
+  const pctRecursosPropios = totalFinanciacion > 0 ? aportacionesSocios / totalFinanciacion : 0;
+  const pctPrestamos = totalFinanciacion > 0 ? prestamo / totalFinanciacion : 0;
+
+  // Cuadro de amortización del préstamo (sistema lineal: cuota de capital constante)
+  const amortizacion = [];
+  if (prestamo > 0 && anios > 0) {
+    const cuotaCapital = prestamo / anios;
+    let saldoPendiente = prestamo;
+    for (let i = 0; i < N_YEARS; i++) {
+      const capitalAnio = i < anios ? cuotaCapital : 0;
+      const interesAnio = saldoPendiente * tipoInteres;
+      const saldoInicio = saldoPendiente;
+      saldoPendiente = Math.max(0, saldoPendiente - capitalAnio);
+      amortizacion.push({
+        anioIndex: i,
+        saldoInicio,
+        capital: capitalAnio,
+        interes: interesAnio,
+        saldoFin: saldoPendiente,
+      });
+    }
+  } else {
+    for (let i = 0; i < N_YEARS; i++) {
+      amortizacion.push({ anioIndex: i, saldoInicio: 0, capital: 0, interes: 0, saldoFin: 0 });
+    }
+  }
+
+  return {
+    aportacionesSocios,
+    prestamo,
+    anios,
+    tipoInteres,
+    totalFinanciacion,
+    coberturaPct,
+    faltante,
+    pctRecursosPropios,
+    pctPrestamos,
+    amortizacion,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* PASO 3: GASTOS                                                         */
+/* ---------------------------------------------------------------------- */
+
+function calcGastos(plan) {
+  const operativos = plan.gastos.operativos || [];
+  const gastosOperativosPorAnio = range(N_YEARS).map((i) =>
+    operativos.reduce((sum, item) => {
+      const mensual = Number(item.mensual) || 0;
+      const variacion = Number(item.variacion) || 0;
+      const anual = mensual * 12;
+      return sum + anual * Math.pow(1 + variacion, i);
+    }, 0)
+  );
+
+  const personal = plan.gastos.personal || {};
+  const empleadosPorAnio = (personal.empleadosPorAnio || [0, 0, 0, 0, 0]).map((v) => Number(v) || 0);
+  const sueldoMensualInicial = Number(personal.sueldoMensual) || 0;
+  const variacionSueldo = Number(personal.variacionSueldoAnual) || 0;
+  const pctCosteEmpresa = Number(personal.pctCosteEmpresa) || 0;
+
+  const sueldoMensualPorAnio = range(N_YEARS).map((i) => sueldoMensualInicial * Math.pow(1 + variacionSueldo, i));
+  const nominaBrutaPorAnio = range(N_YEARS).map((i) => empleadosPorAnio[i] * sueldoMensualPorAnio[i] * 12);
+  const cargasSocialesPorAnio = nominaBrutaPorAnio.map((n) => n * pctCosteEmpresa);
+  const gastosPersonalPorAnio = range(N_YEARS).map((i) => nominaBrutaPorAnio[i] + cargasSocialesPorAnio[i]);
+
+  const totalGastosPorAnio = range(N_YEARS).map((i) => gastosOperativosPorAnio[i] + gastosPersonalPorAnio[i]);
+
+  return {
+    operativos,
+    gastosOperativosPorAnio,
+    empleadosPorAnio,
+    sueldoMensualPorAnio,
+    nominaBrutaPorAnio,
+    cargasSocialesPorAnio,
+    gastosPersonalPorAnio,
+    totalGastosPorAnio,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* PASO 4: VENTAS                                                         */
+/* ---------------------------------------------------------------------- */
+
+function calcVentas(plan) {
+  const productos = plan.ventas.productos || [];
+  const variacionPrecioGlobal = Number(plan.ventas.variacionPrecioAnual) || 0;
+  // Meta de crecimiento de unidades por año, compartida por todos los productos:
+  // metaCrecimientoUnidades[0] = crecimiento de Año2 vs Año1, [1] = Año3 vs Año2, etc.
+  // Se acota en -100%: una caída no puede ser mayor a perder el 100% de las
+  // unidades del año anterior (evita unidades y existencias negativas).
+  const metaCrecimiento = (plan.ventas.metaCrecimientoUnidades || [0, 0, 0, 0]).map((v) => Math.max(-1, Number(v) || 0));
+
+  const detalle = productos.map((p) => {
+    const precioInicial = Number(p.precio) || 0;
+    const unidadesInicial = Number(p.unidades) || 0;
+    const margenPct = Number(p.margenPct) || 0;
+
+    const precioPorAnio = range(N_YEARS).map((i) => precioInicial * Math.pow(1 + variacionPrecioGlobal, i));
+    const unidadesPorAnio = [];
+    let unidadesAcumuladas = unidadesInicial;
+    for (let i = 0; i < N_YEARS; i++) {
+      if (i > 0) unidadesAcumuladas = unidadesAcumuladas * (1 + metaCrecimiento[i - 1]);
+      unidadesPorAnio.push(unidadesAcumuladas);
+    }
+    const ventasPorAnio = range(N_YEARS).map((i) => precioPorAnio[i] * unidadesPorAnio[i]);
+    const margenPorAnio = ventasPorAnio.map((v) => v * margenPct);
+    const costeVentaPorAnio = range(N_YEARS).map((i) => ventasPorAnio[i] - margenPorAnio[i]);
+
+    return {
+      nombre: p.nombre,
+      precioPorAnio,
+      unidadesPorAnio,
+      ventasPorAnio,
+      margenPorAnio,
+      costeVentaPorAnio,
+    };
+  });
+
+  const totalVentasPorAnio = range(N_YEARS).map((i) => detalle.reduce((s, d) => s + d.ventasPorAnio[i], 0));
+  const totalCosteVentaPorAnio = range(N_YEARS).map((i) => detalle.reduce((s, d) => s + d.costeVentaPorAnio[i], 0));
+  const totalMargenPorAnio = range(N_YEARS).map((i) => totalVentasPorAnio[i] - totalCosteVentaPorAnio[i]);
+  const totalUnidadesPorAnio = range(N_YEARS).map((i) => detalle.reduce((s, d) => s + d.unidadesPorAnio[i], 0));
+
+  return { detalle, totalVentasPorAnio, totalCosteVentaPorAnio, totalMargenPorAnio, totalUnidadesPorAnio, metaCrecimiento };
+}
+
+/* ---------------------------------------------------------------------- */
+/* AMORTIZACIÓN DE ACTIVOS (depreciación lineal simple, opcional)         */
+/* ---------------------------------------------------------------------- */
+
+function calcAmortizacionActivos(plan, inversiones) {
+  const vidaUtil = Number(plan.inversiones.vidaUtilAnios) || 0;
+  if (!vidaUtil || inversiones.totalActivos <= 0) {
+    return range(N_YEARS).map(() => 0);
+  }
+  const cuotaAnual = inversiones.totalActivos / vidaUtil;
+  let acumulado = 0;
+  return range(N_YEARS).map(() => {
+    if (acumulado >= inversiones.totalActivos) return 0;
+    const cuota = Math.min(cuotaAnual, inversiones.totalActivos - acumulado);
+    acumulado += cuota;
+    return cuota;
+  });
+}
+
+/* ---------------------------------------------------------------------- */
+/* RESULTADOS (Pérdidas y Ganancias)                                      */
+/* ---------------------------------------------------------------------- */
+
+function calcResultados(plan, ventas, gastos, financiacion, amortizacionActivos, inversiones) {
+  const tasaImpuesto = Number(plan.resultados?.tasaImpuesto) || 0;
+
+  const totalVentas = ventas.totalVentasPorAnio;
+  const costeVentas = ventas.totalCosteVentaPorAnio;
+  const margenBruto = ventas.totalMargenPorAnio;
+  const gastosPersonal = gastos.gastosPersonalPorAnio;
+  const gastosCorrientes = gastos.gastosOperativosPorAnio;
+
+  // Gastos de constitución, lanzamiento y otros son un gasto único del año 1
+  // (no capitalizable, a diferencia del stock inicial, que sí queda como
+  // activo "Existencias"). El fondo de imprevistos NO se incluye aquí: es un
+  // colchón de caja, no un gasto garantizado — se financia pero no se expensa,
+  // así que queda como caja disponible salvo que realmente se necesite usar.
+  const gastosEstablecimiento = range(N_YEARS).map((i) =>
+    i === 0 ? inversiones.gastosConstitucion + inversiones.gastosLanzamiento + inversiones.otrosGastos : 0
+  );
+
+  const ebitda = range(N_YEARS).map((i) => margenBruto[i] - gastosPersonal[i] - gastosCorrientes[i] - gastosEstablecimiento[i]);
+  const amortizaciones = amortizacionActivos;
+  const ebit = range(N_YEARS).map((i) => ebitda[i] - amortizaciones[i]);
+  const gastosFinancieros = financiacion.amortizacion.map((a) => a.interes);
+  const bai = range(N_YEARS).map((i) => ebit[i] - gastosFinancieros[i]);
+
+  // Arrastre de pérdidas tributarias: una pérdida de un año reduce la base
+  // imponible de años futuros hasta agotarse (regla general en Chile, sin
+  // límite de tiempo). El impuesto se paga sobre la base imponible después
+  // de usar la pérdida acumulada disponible, no sobre el BAI completo.
+  const impuesto = [];
+  const perdidaTributariaUtilizada = [];
+  const perdidaTributariaAcumulada = [];
+  let perdidaDisponible = 0;
+  for (let i = 0; i < N_YEARS; i++) {
+    let baseImponible = 0;
+    let usada = 0;
+    if (bai[i] > 0) {
+      usada = Math.min(perdidaDisponible, bai[i]);
+      baseImponible = bai[i] - usada;
+      perdidaDisponible -= usada;
+    } else {
+      perdidaDisponible += -bai[i];
+    }
+    impuesto.push(baseImponible * tasaImpuesto);
+    perdidaTributariaUtilizada.push(usada);
+    perdidaTributariaAcumulada.push(perdidaDisponible);
+  }
+
+  const resultadoNeto = range(N_YEARS).map((i) => bai[i] - impuesto[i]);
+  const pctSobreVentas = range(N_YEARS).map((i) => (totalVentas[i] !== 0 ? resultadoNeto[i] / totalVentas[i] : 0));
+
+  return {
+    totalVentas,
+    costeVentas,
+    margenBruto,
+    gastosPersonal,
+    gastosCorrientes,
+    gastosEstablecimiento,
+    ebitda,
+    amortizaciones,
+    ebit,
+    gastosFinancieros,
+    bai,
+    impuesto,
+    perdidaTributariaUtilizada,
+    perdidaTributariaAcumulada,
+    resultadoNeto,
+    pctSobreVentas,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* EXISTENCIAS (stock que debe mantenerse para sostener las ventas)      */
+/* ---------------------------------------------------------------------- */
+
+function calcExistencias(inversiones, resultados) {
+  // El stock inicial (año 1) es el que el usuario invirtió en el Paso 1.
+  // Desde el año 2, el inventario se escala junto con el Costo de Ventas:
+  // se mantiene la misma "cobertura" (existencias / costo de ventas) que
+  // implicaba el stock inicial en el año 1. Así, si las ventas crecen, el
+  // inventario necesario para sostenerlas crece en la misma proporción.
+  const costeVentasAnio1 = resultados.costeVentas[0];
+  const coberturaBase = costeVentasAnio1 > 0 ? inversiones.stockInicial / costeVentasAnio1 : 0;
+
+  return range(N_YEARS).map((i) => (i === 0 ? inversiones.stockInicial : coberturaBase * resultados.costeVentas[i]));
+}
+
+/* ---------------------------------------------------------------------- */
+/* CASH FLOW                                                              */
+/* ---------------------------------------------------------------------- */
+
+function calcCashFlow(plan, inversiones, financiacion, resultados, ventas, existenciasPorAnio) {
+  const cf = plan.cashflow || {};
+  const diasCobro = Number(cf.diasCobro) || 0;
+  const diasPago = Number(cf.diasPago) || 0;
+  const pctDividendos = Number(cf.pctDividendos) || 0;
+
+  // Los gastos de constitución/lanzamiento/otros/imprevistos NO se restan aquí:
+  // ya se reconocen como gasto del año 1 en el P&G (ver calcResultados) y su
+  // efecto en caja llega a través del "Resultado neto" del flujo del año 1.
+  // Restarlos también aquí duplicaría la salida de caja y descuadraría el Balance.
+  const usosIniciales = inversiones.totalActivos + inversiones.stockInicial;
+  const fuentesIniciales = financiacion.totalFinanciacion;
+  const saldoInicioAnio1 = fuentesIniciales - usosIniciales;
+
+  const creditoClientesPorAnio = range(N_YEARS).map((i) => (ventas.totalVentasPorAnio[i] * diasCobro) / 365);
+  const creditoProveedoresPorAnio = range(N_YEARS).map((i) => (ventas.totalCosteVentaPorAnio[i] * diasPago) / 365);
+
+  const filas = [];
+  let saldoCaja = saldoInicioAnio1;
+  let creditoClientesAnterior = 0;
+  let creditoProveedoresAnterior = 0;
+  // El stock del año 1 ya se pagó en el momento inicial (usosIniciales), así
+  // que la variación de existencias parte a contarse desde ahí, no desde 0.
+  let existenciasAnterior = existenciasPorAnio[0];
+
+  for (let i = 0; i < N_YEARS; i++) {
+    const saldoInicio = saldoCaja;
+    const resultadoNeto = resultados.resultadoNeto[i];
+    const amortizacionActivo = resultados.amortizaciones[i];
+    const amortizacionPrestamo = financiacion.amortizacion[i].capital;
+    const variacionClientes = creditoClientesPorAnio[i] - creditoClientesAnterior;
+    const variacionProveedores = creditoProveedoresPorAnio[i] - creditoProveedoresAnterior;
+    const variacionExistencias = i === 0 ? 0 : existenciasPorAnio[i] - existenciasAnterior;
+    const dividendos = resultadoNeto > 0 ? resultadoNeto * pctDividendos : 0;
+
+    const flujoOperativo =
+      resultadoNeto + amortizacionActivo - variacionClientes + variacionProveedores - variacionExistencias;
+    const flujoFinanciero = -amortizacionPrestamo - dividendos;
+    const flujoNetoAnio = flujoOperativo + flujoFinanciero;
+
+    saldoCaja = saldoInicio + flujoNetoAnio;
+
+    filas.push({
+      saldoInicio,
+      resultadoNeto,
+      amortizacionActivo,
+      amortizacionPrestamo,
+      variacionClientes,
+      variacionProveedores,
+      variacionExistencias,
+      dividendos,
+      flujoNetoAnio,
+      saldoFin: saldoCaja,
+    });
+
+    creditoClientesAnterior = creditoClientesPorAnio[i];
+    existenciasAnterior = existenciasPorAnio[i];
+    creditoProveedoresAnterior = creditoProveedoresPorAnio[i];
+  }
+
+  return {
+    diasCobro,
+    diasPago,
+    pctDividendos,
+    saldoInicioAnio1,
+    creditoClientesPorAnio,
+    creditoProveedoresPorAnio,
+    existenciasPorAnio,
+    filas,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* BALANCE                                                                */
+/* ---------------------------------------------------------------------- */
+
+function calcBalance(plan, inversiones, financiacion, resultados, cashflow) {
+  const filas = [];
+  let reservasAcumuladas = 0;
+  let amortizacionAcumulada = 0;
+
+  for (let i = 0; i < N_YEARS; i++) {
+    amortizacionAcumulada += resultados.amortizaciones[i];
+    const inmovilizado = inversiones.totalActivos;
+    const activoNoCorriente = inmovilizado - amortizacionAcumulada;
+
+    const existencias = cashflow.existenciasPorAnio[i];
+    const realizable = cashflow.creditoClientesPorAnio[i];
+    const disponible = cashflow.filas[i].saldoFin;
+    const activoCorriente = existencias + realizable + disponible;
+
+    const totalActivo = activoNoCorriente + activoCorriente;
+
+    const dividendos = cashflow.filas[i].dividendos;
+    reservasAcumuladas += resultados.resultadoNeto[i] - dividendos;
+
+    const capital = financiacion.aportacionesSocios;
+    const patrimonioNeto = capital + reservasAcumuladas;
+
+    const deudaPrestamo = financiacion.amortizacion[i].saldoFin;
+    const cuotaCapitalProximoAnio = i + 1 < N_YEARS ? financiacion.amortizacion[i + 1].capital : 0;
+    const pasivoNoCorriente = Math.max(0, deudaPrestamo - cuotaCapitalProximoAnio);
+    const proveedores = cashflow.creditoProveedoresPorAnio[i];
+    const pasivoCorrienteDeuda = Math.min(deudaPrestamo, cuotaCapitalProximoAnio);
+    const pasivoCorriente = proveedores + pasivoCorrienteDeuda;
+
+    const totalPatrimonioPasivo = patrimonioNeto + pasivoNoCorriente + pasivoCorriente;
+    const diferencia = totalActivo - totalPatrimonioPasivo;
+    const cuadra = Math.abs(diferencia) < 0.5;
+
+    filas.push({
+      activoNoCorriente,
+      existencias,
+      realizable,
+      disponible,
+      activoCorriente,
+      totalActivo,
+      patrimonioNeto,
+      capital,
+      reservas: reservasAcumuladas,
+      pasivoNoCorriente,
+      deudaPrestamo,
+      pasivoCorriente,
+      proveedores,
+      totalPatrimonioPasivo,
+      diferencia,
+      cuadra,
+    });
+  }
+
+  return { filas };
+}
+
+/* ---------------------------------------------------------------------- */
+/* CÁLCULO GLOBAL                                                         */
+/* ---------------------------------------------------------------------- */
+
+function calcularPlan(plan) {
+  const inversiones = calcInversiones(plan);
+  const financiacion = calcFinanciacion(plan, inversiones);
+  const gastos = calcGastos(plan);
+  const ventas = calcVentas(plan);
+  const amortizacionActivos = calcAmortizacionActivos(plan, inversiones);
+  const resultados = calcResultados(plan, ventas, gastos, financiacion, amortizacionActivos, inversiones);
+  const existenciasPorAnio = calcExistencias(inversiones, resultados);
+  const cashflow = calcCashFlow(plan, inversiones, financiacion, resultados, ventas, existenciasPorAnio);
+  const balance = calcBalance(plan, inversiones, financiacion, resultados, cashflow);
+
+  return { inversiones, financiacion, gastos, ventas, resultados, cashflow, balance };
+}
+
+window.MiniPlanCalc = {
+  N_YEARS,
+  range,
+  calcInversiones,
+  calcFinanciacion,
+  calcGastos,
+  calcVentas,
+  calcAmortizacionActivos,
+  calcResultados,
+  calcExistencias,
+  calcCashFlow,
+  calcBalance,
+  calcularPlan,
+};
+
+
+/* ---- validations.js ---- */
+/**
+ * Reglas de validación y advertencias, inspiradas en los avisos del propio
+ * Excel original (p.ej. celda "Faltan" en Financiación, o "NO CUADRA" en
+ * Balance). Cada regla se evalúa contra el resultado ya calculado
+ * (window.MiniPlanCalc.calcularPlan) y produce mensajes con nivel:
+ *   'error'  -> bloquea avanzar al siguiente paso
+ *   'warn'   -> advertencia, deja avanzar
+ *   'info'   -> mensaje orientativo
+ */
+
+function money(n) {
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(
+    Math.round(n || 0)
+  );
+}
+
+function validarPaso1(plan, calc) {
+  const msgs = [];
+  const { inversiones } = calc;
+  if (inversiones.totalInversion <= 0) {
+    msgs.push({ level: 'error', text: 'Registra al menos una inversión, gasto inicial o stock inicial para continuar.' });
+  }
+  if (inversiones.stockInicial === 0 && inversiones.totalActivos === 0 && inversiones.totalGastosProvisiones === 0) {
+    msgs.push({ level: 'info', text: 'Aún no has ingresado montos de inversión. Puedes completarlos aunque sean estimados.' });
+  }
+  return msgs;
+}
+
+function validarPaso2(plan, calc) {
+  const msgs = [];
+  const { financiacion, inversiones } = calc;
+
+  if (financiacion.totalFinanciacion === 0 && inversiones.totalInversion > 0) {
+    msgs.push({ level: 'error', text: 'No has definido ninguna fuente de financiación (aportaciones o préstamo).' });
+  }
+
+  if (financiacion.faltante > 0.5) {
+    msgs.push({
+      level: 'error',
+      text: `Faltan ${money(financiacion.faltante)} de financiación para cubrir la inversión total (${money(
+        inversiones.totalInversion
+      )}). Cobertura actual: ${(financiacion.coberturaPct * 100).toFixed(1)}%.`,
+    });
+  } else if (financiacion.totalFinanciacion > inversiones.totalInversion * 1.2 && inversiones.totalInversion > 0) {
+    msgs.push({
+      level: 'info',
+      text: 'La financiación supera holgadamente la inversión prevista; el excedente quedará como caja disponible desde el año 1.',
+    });
+  }
+
+  if (financiacion.prestamo > 0 && (financiacion.anios <= 0 || financiacion.tipoInteres < 0)) {
+    msgs.push({
+      level: 'error',
+      text: 'Definiste un préstamo pero faltan los años de plazo o el tipo de interés. Complétalos para calcular la cuota y los intereses.',
+    });
+  }
+
+  if (financiacion.prestamo > 0 && financiacion.anios > N_YEARS_CONST()) {
+    msgs.push({
+      level: 'info',
+      text: `El préstamo se amortiza en ${financiacion.anios} años, más allá del horizonte de 5 años del plan; al año 5 quedará saldo pendiente.`,
+    });
+  }
+
+  return msgs;
+}
+
+function N_YEARS_CONST() {
+  return window.MiniPlanCalc ? window.MiniPlanCalc.N_YEARS : 5;
+}
+
+function validarPaso3(plan, calc) {
+  const msgs = [];
+  const { gastos } = calc;
+  const sinPersonalNiOperativos = gastos.totalGastosPorAnio.every((v) => v === 0);
+  if (sinPersonalNiOperativos) {
+    msgs.push({ level: 'warn', text: 'No se han registrado gastos operativos ni de personal. Revisa si es realista para tu negocio.' });
+  }
+  const personal = plan.gastos?.personal || {};
+  const tieneEmpleados = (personal.empleadosPorAnio || []).some((v) => Number(v) > 0);
+  if (tieneEmpleados && (!personal.sueldoMensual || Number(personal.sueldoMensual) <= 0)) {
+    msgs.push({ level: 'error', text: 'Indicaste empleados pero falta el sueldo bruto mensual medio.' });
+  }
+  return msgs;
+}
+
+function validarPaso4(plan, calc) {
+  const msgs = [];
+  const { ventas } = calc;
+  if (!plan.ventas.productos || plan.ventas.productos.length === 0) {
+    msgs.push({ level: 'error', text: 'Agrega al menos un producto o servicio para proyectar ventas.' });
+    return msgs;
+  }
+  const sinPrecioOUnidades = plan.ventas.productos.some(
+    (p) => !(Number(p.precio) > 0) || !(Number(p.unidades) >= 0)
+  );
+  if (sinPrecioOUnidades) {
+    msgs.push({ level: 'error', text: 'Todos los productos deben tener precio y unidades estimadas del año 1.' });
+  }
+  plan.ventas.productos.forEach((p) => {
+    const m = Number(p.margenPct) || 0;
+    if (m > 1) {
+      msgs.push({
+        level: 'error',
+        text: `"${p.nombre || 'Producto sin nombre'}" tiene un margen bruto de ${(m * 100).toFixed(0)}% — no puede superar el 100% (implicaría un costo de venta negativo). Revisa si quisiste decir un margen menor, o un margen sobre el costo (markup) en vez de sobre el precio de venta.`,
+      });
+    } else if (m < 0) {
+      msgs.push({
+        level: 'warn',
+        text: `"${p.nombre || 'Producto sin nombre'}" tiene un margen bruto negativo (${(m * 100).toFixed(0)}%): estás proyectando vender ese producto bajo el costo.`,
+      });
+    }
+  });
+  if (ventas.totalVentasPorAnio[0] === 0) {
+    msgs.push({ level: 'warn', text: 'Las ventas del año 1 son $0. Verifica que sea correcto antes de continuar.' });
+  }
+  const meta = plan.ventas.metaCrecimientoUnidades || [];
+  meta.forEach((g, i) => {
+    const pct = Number(g) || 0;
+    if (pct > 0.4) {
+      msgs.push({
+        level: 'warn',
+        text: `La meta de crecimiento del año ${i + 2} vs año ${i + 1} es ${(pct * 100).toFixed(0)}% — muy agresiva para sostener año tras año. Considera algo más conservador (15-25% es razonable para un negocio en crecimiento).`,
+      });
+    }
+    if (pct <= -1) {
+      msgs.push({
+        level: 'warn',
+        text: `La meta de crecimiento del año ${i + 2} vs año ${i + 1} implica perder el 100% o más de las unidades del año anterior — se acotó a -100% (ventas en $0 ese año) para evitar unidades negativas.`,
+      });
+    } else if (pct < 0) {
+      msgs.push({
+        level: 'info',
+        text: `La meta de crecimiento del año ${i + 2} vs año ${i + 1} es negativa (${(pct * 100).toFixed(0)}%): estás proyectando una caída de ventas ese año.`,
+      });
+    }
+  });
+  return msgs;
+}
+
+function validarResultados(plan, calc) {
+  const msgs = [];
+  const { resultados } = calc;
+  resultados.resultadoNeto.forEach((r, i) => {
+    if (r < 0) {
+      msgs.push({
+        level: 'warn',
+        text: `Año ${i + 1}: el plan proyecta pérdidas de ${money(Math.abs(r))}. Revisa gastos, precios o ritmo de contratación de ese año.`,
+      });
+    }
+  });
+  const ebitdaCaeFuerte = resultados.ebitda.some((v, i) => i > 0 && resultados.ebitda[i - 1] > 0 && v < 0);
+  if (ebitdaCaeFuerte) {
+    msgs.push({
+      level: 'warn',
+      text: 'El EBITDA pasa de positivo a negativo en algún año: probablemente un salto de gastos (p.ej. nuevas contrataciones) no está siendo absorbido por el crecimiento de ventas.',
+    });
+  }
+  resultados.perdidaTributariaUtilizada.forEach((usada, i) => {
+    if (usada > 0.5) {
+      msgs.push({
+        level: 'info',
+        text: `Año ${i + 1}: se usaron ${money(usada)} de pérdida tributaria de años anteriores para rebajar el impuesto a pagar (arrastre de pérdidas).`,
+      });
+    }
+  });
+  return msgs;
+}
+
+function validarCashflow(plan, calc) {
+  const msgs = [];
+  const { cashflow } = calc;
+  if (cashflow.saldoInicioAnio1 < 0) {
+    msgs.push({
+      level: 'error',
+      text: `La caja inicial queda negativa (${money(cashflow.saldoInicioAnio1)}): la inversión inicial supera a la financiación obtenida.`,
+    });
+  }
+  cashflow.filas.forEach((f, i) => {
+    if (f.saldoFin < 0) {
+      msgs.push({
+        level: 'error',
+        text: `Año ${i + 1}: la caja proyectada se vuelve negativa (${money(f.saldoFin)}). El negocio necesitaría financiación adicional o ajustar gastos/dividendos ese año.`,
+      });
+    }
+  });
+  return msgs;
+}
+
+function validarBalance(plan, calc) {
+  const msgs = [];
+  calc.balance.filas.forEach((f, i) => {
+    if (!f.cuadra) {
+      msgs.push({
+        level: 'error',
+        text: `Año ${i + 1}: el balance no cuadra (diferencia de ${money(f.diferencia)}). Esto indica un error en el modelo; revisa los datos ingresados.`,
+      });
+    }
+  });
+  return msgs;
+}
+
+window.MiniPlanValidations = {
+  money,
+  validarPaso1,
+  validarPaso2,
+  validarPaso3,
+  validarPaso4,
+  validarResultados,
+  validarCashflow,
+  validarBalance,
+};
+
+
+/* ---- storage.js ---- */
+/**
+ * Persistencia local: autoguardado en localStorage y exportación/importación
+ * del plan como archivo .json descargable. Sin backend, sin cuentas.
+ */
+
+const STORAGE_KEY = 'miniplan_negocio_v1';
+
+function planPorDefecto() {
+  return {
+    meta: {
+      nombreNegocio: '',
+      anioInicial: new Date().getFullYear() + 1,
+    },
+    inversiones: {
+      activos: [],
+      vidaUtilAnios: 0,
+      gastosInicio: {
+        stockInicial: 0,
+        gastosConstitucion: 0,
+        gastosLanzamiento: 0,
+        otrosGastos: 0,
+        fondoImprevistos: 0,
+      },
+    },
+    financiacion: {
+      aportacionesSocios: 0,
+      prestamo: 0,
+      anios: 0,
+      tipoInteres: 0,
+    },
+    gastos: {
+      operativos: [
+        { nombre: 'Arriendos', mensual: 0, variacion: 0.05 },
+        { nombre: 'Publicidad y promoción', mensual: 0, variacion: 0.05 },
+        { nombre: 'Servicios básicos', mensual: 0, variacion: 0.05 },
+        { nombre: 'Asesorías', mensual: 0, variacion: 0.05 },
+      ],
+      personal: {
+        empleadosPorAnio: [0, 0, 0, 0, 0],
+        sueldoMensual: 0,
+        variacionSueldoAnual: 0.05,
+        pctCosteEmpresa: 0.21,
+      },
+    },
+    ventas: {
+      productos: [],
+      variacionPrecioAnual: 0.05,
+      metaCrecimientoUnidades: [0.2, 0.15, 0.12, 0.1],
+    },
+    resultados: {
+      tasaImpuesto: 0.25,
+    },
+    cashflow: {
+      diasCobro: 0,
+      diasPago: 0,
+      pctDividendos: 0,
+    },
+  };
+}
+
+function planEjemplo() {
+  return {
+    meta: {
+      nombreNegocio: 'Vinilos del Sur',
+      anioInicial: new Date().getFullYear() + 1,
+    },
+    inversiones: {
+      activos: [
+        { nombre: 'Reforma y decoración del local', monto: 800000 },
+        { nombre: 'Mobiliario (estanterías, mesones)', monto: 650000 },
+        { nombre: 'Equipos informáticos y POS', monto: 450000 },
+        { nombre: 'Software de inventario / punto de venta', monto: 150000 },
+      ],
+      vidaUtilAnios: 5,
+      gastosInicio: {
+        stockInicial: 2500000,
+        gastosConstitucion: 180000,
+        gastosLanzamiento: 300000,
+        otrosGastos: 120000,
+        fondoImprevistos: 200000,
+      },
+    },
+    financiacion: {
+      aportacionesSocios: 2350000,
+      prestamo: 3000000,
+      anios: 5,
+      tipoInteres: 0.08,
+    },
+    gastos: {
+      operativos: [
+        { nombre: 'Arriendo del local', mensual: 450000, variacion: 0.05 },
+        { nombre: 'Publicidad y marketing', mensual: 100000, variacion: 0.08 },
+        { nombre: 'Servicios básicos (luz, agua, internet)', mensual: 80000, variacion: 0.05 },
+        { nombre: 'Seguros', mensual: 40000, variacion: 0.03 },
+        { nombre: 'Asesoría contable', mensual: 90000, variacion: 0.04 },
+        { nombre: 'Mantenimiento y limpieza', mensual: 35000, variacion: 0.04 },
+        { nombre: 'Software y suscripciones', mensual: 25000, variacion: 0.03 },
+      ],
+      personal: {
+        empleadosPorAnio: [1, 2, 2, 3, 3],
+        sueldoMensual: 550000,
+        variacionSueldoAnual: 0.05,
+        pctCosteEmpresa: 0.21,
+      },
+    },
+    ventas: {
+      productos: [
+        { nombre: 'Discos usados / baratos', precio: 15000, margenPct: 0.45, unidades: 2400 },
+        { nombre: 'Vinilos de época / colección', precio: 45000, margenPct: 0.55, unidades: 900 },
+        { nombre: 'Reediciones nuevas', precio: 28000, margenPct: 0.4, unidades: 1200 },
+        { nombre: 'Accesorios (tornamesas, fundas, limpieza)', precio: 35000, margenPct: 0.35, unidades: 300 },
+      ],
+      variacionPrecioAnual: 0.05,
+      metaCrecimientoUnidades: [0.2, 0.15, 0.12, 0.1],
+    },
+    resultados: {
+      tasaImpuesto: 0.25,
+    },
+    cashflow: {
+      diasCobro: 0,
+      diasPago: 30,
+      pctDividendos: 0.2,
+    },
+  };
+}
+
+// Rellena con valores por defecto cualquier estructura incompleta, corrupta
+// o incompatible (ej: JSON importado que no es un plan de negocio, o un
+// localStorage dañado). Sin esto, cargar un objeto con una forma inesperada
+// hace que toda la app deje de responder — ni siquiera "Nuevo plan" funciona,
+// porque el error ocurre antes de registrar los eventos de los botones.
+function normalizarPlan(raw) {
+  const base = planPorDefecto();
+  if (!raw || typeof raw !== 'object') return base;
+
+  return {
+    meta: { ...base.meta, ...(raw.meta && typeof raw.meta === 'object' ? raw.meta : {}) },
+    inversiones: {
+      ...base.inversiones,
+      ...(raw.inversiones && typeof raw.inversiones === 'object' ? raw.inversiones : {}),
+      activos: Array.isArray(raw.inversiones?.activos) ? raw.inversiones.activos : base.inversiones.activos,
+      gastosInicio: {
+        ...base.inversiones.gastosInicio,
+        ...(raw.inversiones?.gastosInicio && typeof raw.inversiones.gastosInicio === 'object' ? raw.inversiones.gastosInicio : {}),
+      },
+    },
+    financiacion: { ...base.financiacion, ...(raw.financiacion && typeof raw.financiacion === 'object' ? raw.financiacion : {}) },
+    gastos: {
+      operativos: Array.isArray(raw.gastos?.operativos) ? raw.gastos.operativos : base.gastos.operativos,
+      personal: {
+        ...base.gastos.personal,
+        ...(raw.gastos?.personal && typeof raw.gastos.personal === 'object' ? raw.gastos.personal : {}),
+        empleadosPorAnio: Array.isArray(raw.gastos?.personal?.empleadosPorAnio)
+          ? raw.gastos.personal.empleadosPorAnio
+          : base.gastos.personal.empleadosPorAnio,
+      },
+    },
+    ventas: {
+      ...base.ventas,
+      ...(raw.ventas && typeof raw.ventas === 'object' ? raw.ventas : {}),
+      productos: Array.isArray(raw.ventas?.productos) ? raw.ventas.productos : base.ventas.productos,
+      metaCrecimientoUnidades: Array.isArray(raw.ventas?.metaCrecimientoUnidades)
+        ? raw.ventas.metaCrecimientoUnidades
+        : base.ventas.metaCrecimientoUnidades,
+    },
+    resultados: { ...base.resultados, ...(raw.resultados && typeof raw.resultados === 'object' ? raw.resultados : {}) },
+    cashflow: { ...base.cashflow, ...(raw.cashflow && typeof raw.cashflow === 'object' ? raw.cashflow : {}) },
+  };
+}
+
+function guardarLocal(plan) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(plan));
+}
+
+function cargarLocal() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    return normalizarPlan(JSON.parse(raw));
+  } catch (e) {
+    return null;
+  }
+}
+
+function borrarLocal() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+function exportarJSON(plan) {
+  const nombre = (plan.meta?.nombreNegocio || 'mi-plan-de-negocio').trim().replace(/\s+/g, '_').toLowerCase();
+  const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${nombre || 'plan-de-negocio'}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importarJSON(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          reject(new Error('El archivo no tiene el formato de un plan de negocio (se esperaba un objeto JSON).'));
+          return;
+        }
+        resolve(normalizarPlan(parsed));
+      } catch (e) {
+        reject(new Error('El archivo no es un plan de negocio válido (JSON inválido).'));
+      }
+    };
+    reader.onerror = () => reject(new Error('No se pudo leer el archivo.'));
+    reader.readAsText(file);
+  });
+}
+
+window.MiniPlanStorage = {
+  planPorDefecto,
+  planEjemplo,
+  normalizarPlan,
+  guardarLocal,
+  cargarLocal,
+  borrarLocal,
+  exportarJSON,
+  importarJSON,
+};
+
+
+/* ---- wizard.js ---- */
+(function () {
+  const { calcularPlan } = window.MiniPlanCalc;
+  const V = window.MiniPlanValidations;
+  const S = window.MiniPlanStorage;
+
+  let plan = S.cargarLocal() || S.planPorDefecto();
+  let currentStep = 1;
+  let calc = calcularPlan(plan);
+
+  const $ = (sel, ctx) => (ctx || document).querySelector(sel);
+  const $all = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
+
+  function anioLabel(i) {
+    const base = Number(plan.meta?.anioInicial) || new Date().getFullYear() + 1;
+    return String(base + i);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* MODAL DE CONFIRMACIÓN (reemplaza window.confirm, que no funciona  */
+  /* dentro de algunos paneles de vista previa embebidos)               */
+  /* ---------------------------------------------------------------- */
+
+  function confirmDialog(message) {
+    return new Promise((resolve) => {
+      const overlay = $('#modalConfirm');
+      $('#modalConfirmText').textContent = message;
+      overlay.classList.remove('hidden');
+
+      function cleanup(result) {
+        overlay.classList.add('hidden');
+        okBtn.removeEventListener('click', onOk);
+        cancelBtn.removeEventListener('click', onCancel);
+        overlay.removeEventListener('click', onOverlay);
+        resolve(result);
+      }
+      const okBtn = $('#modalConfirmOk');
+      const cancelBtn = $('#modalConfirmCancel');
+      function onOk() { cleanup(true); }
+      function onCancel() { cleanup(false); }
+      function onOverlay(e) { if (e.target === overlay) cleanup(false); }
+
+      okBtn.addEventListener('click', onOk);
+      cancelBtn.addEventListener('click', onCancel);
+      overlay.addEventListener('click', onOverlay);
+    });
+  }
+
+  function alertDialog(message) {
+    $('#modalConfirmCancel').classList.add('hidden');
+    return confirmDialog(message).then(() => {
+      $('#modalConfirmCancel').classList.remove('hidden');
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* RECALCULO Y RENDER GLOBAL                                        */
+  /* ---------------------------------------------------------------- */
+
+  function recalcAndRender() {
+    calc = calcularPlan(plan);
+    renderTotales();
+    renderMessages();
+    renderStepNav();
+    updateFooter();
+    S.guardarLocal(plan);
+  }
+
+  function renderTotales() {
+    const t1 = $('#totalesPaso1');
+    t1.innerHTML = `
+      Total inversión en activos: <strong>${V.money(calc.inversiones.totalActivos)}</strong><br>
+      Total gastos y provisiones de inicio: <strong>${V.money(calc.inversiones.totalGastosProvisiones)}</strong><br>
+      <strong>Inversión total prevista: ${V.money(calc.inversiones.totalInversion)}</strong>
+    `;
+
+    const t2 = $('#totalesPaso2');
+    t2.innerHTML = `
+      Total financiación: <strong>${V.money(calc.financiacion.totalFinanciacion)}</strong>
+      (${(calc.financiacion.pctRecursosPropios * 100).toFixed(0)}% propio /
+      ${(calc.financiacion.pctPrestamos * 100).toFixed(0)}% préstamo)<br>
+      Cobertura de la inversión: <strong>${(calc.financiacion.coberturaPct * 100).toFixed(1)}%</strong>
+      ${calc.financiacion.faltante > 0.5 ? ` — faltan ${V.money(calc.financiacion.faltante)}` : ' — OK'}
+    `;
+
+    const t3 = $('#totalesPaso3');
+    t3.innerHTML = window.MiniPlanCalc
+      .range(5)
+      .map((i) => `${anioLabel(i)}: <strong>${V.money(calc.gastos.totalGastosPorAnio[i])}</strong>`)
+      .join(' &nbsp;|&nbsp; ');
+
+    const t4 = $('#totalesPaso4');
+    const ventasLinea = window.MiniPlanCalc
+      .range(5)
+      .map((i) => `${anioLabel(i)}: <strong>${V.money(calc.ventas.totalVentasPorAnio[i])}</strong>`)
+      .join(' &nbsp;|&nbsp; ');
+    const unidadesLinea = window.MiniPlanCalc
+      .range(5)
+      .map((i) => `${anioLabel(i)}: <strong>${Math.round(calc.ventas.totalUnidadesPorAnio[i]).toLocaleString('es-CL')}</strong>`)
+      .join(' &nbsp;|&nbsp; ');
+    t4.innerHTML = `Ventas totales: ${ventasLinea}<br>Unidades totales: ${unidadesLinea}`;
+  }
+
+  function renderMsgList(containerId, msgs) {
+    const el = $('#' + containerId);
+    if (!msgs.length) {
+      el.innerHTML = '';
+      return;
+    }
+    el.innerHTML = msgs
+      .map((m) => `<div class="msg ${m.level}">${m.level === 'error' ? '⛔' : m.level === 'warn' ? '⚠️' : 'ℹ️'} ${m.text}</div>`)
+      .join('');
+  }
+
+  function allMessagesByStep() {
+    return {
+      1: V.validarPaso1(plan, calc),
+      2: V.validarPaso2(plan, calc),
+      3: V.validarPaso3(plan, calc),
+      4: V.validarPaso4(plan, calc),
+      5: [...V.validarResultados(plan, calc), ...V.validarCashflow(plan, calc), ...V.validarBalance(plan, calc)],
+    };
+  }
+
+  function renderMessages() {
+    const msgs = allMessagesByStep();
+    renderMsgList('msgs-1', msgs[1]);
+    renderMsgList('msgs-2', msgs[2]);
+    renderMsgList('msgs-3', msgs[3]);
+    renderMsgList('msgs-4', msgs[4]);
+
+    renderMsgList('msgs-5-general', V.validarResultados(plan, calc));
+    renderMsgList('msgs-5-cf', V.validarCashflow(plan, calc));
+    renderMsgList('msgs-5-bal', V.validarBalance(plan, calc));
+    renderMsgList('msgs-5-pg', []);
+
+    renderTablasResultados();
+    renderInformeResumen();
+  }
+
+  function renderInformeResumen() {
+    const el = $('#informeResumen');
+    if (!el) return;
+
+    const inv = calc.inversiones.totalInversion;
+    const fin = calc.financiacion.totalFinanciacion;
+    const resultadoAcumulado = calc.resultados.resultadoNeto.reduce((s, v) => s + v, 0);
+    const cajaFinal = calc.cashflow.filas[calc.cashflow.filas.length - 1].saldoFin;
+    const aniosPerdida = calc.resultados.resultadoNeto
+      .map((v, i) => (v < 0 ? anioLabel(i) : null))
+      .filter(Boolean);
+    const primerAnioCajaNegativa = calc.cashflow.filas.findIndex((f) => f.saldoFin < 0);
+    const retornoPct = inv > 0 ? resultadoAcumulado / inv : null;
+
+    const lineas = [];
+    lineas.push(`Inversión total prevista: <strong>${V.money(inv)}</strong>, financiada en un ${(calc.financiacion.coberturaPct * 100).toFixed(0)}%.`);
+    lineas.push(`Resultado neto acumulado a 5 años: <strong>${V.money(resultadoAcumulado)}</strong>${retornoPct !== null ? ` (${(retornoPct * 100).toFixed(0)}% de la inversión inicial)` : ''}.`);
+    lineas.push(`Caja proyectada al cierre de ${anioLabel(4)}: <strong>${V.money(cajaFinal)}</strong>.`);
+    if (aniosPerdida.length) {
+      lineas.push(`Años con pérdida proyectada: <strong>${aniosPerdida.join(', ')}</strong> — revísalos antes de comprometer la inversión.`);
+    } else {
+      lineas.push('El plan no proyecta pérdidas en ningún año con los supuestos actuales.');
+    }
+    if (primerAnioCajaNegativa !== -1) {
+      lineas.push(`⚠️ La caja se vuelve negativa desde <strong>${anioLabel(primerAnioCajaNegativa)}</strong>: este plan, tal como está, necesitaría financiación adicional.`);
+    }
+
+    el.innerHTML = lineas.map((l) => `<div>${l}</div>`).join('');
+  }
+
+  function renderStepNav() {
+    const msgs = allMessagesByStep();
+    $all('.step-item').forEach((item) => {
+      const step = Number(item.dataset.step);
+      item.classList.toggle('active', step === currentStep);
+      const hasError = (msgs[step] || []).some((m) => m.level === 'error');
+      item.classList.toggle('has-error', hasError);
+      item.classList.toggle('done', step < currentStep && !hasError);
+    });
+  }
+
+  function updateFooter() {
+    $('#btnAtras').disabled = currentStep === 1;
+    const msgs = allMessagesByStep();
+    const hasError = (msgs[currentStep] || []).some((m) => m.level === 'error');
+    $('#btnSiguiente').disabled = hasError;
+    $('#btnSiguiente').textContent = currentStep === 5 ? 'Plan completo — exportar ✓' : 'Siguiente →';
+    $('#footerHint').textContent = hasError ? 'Resuelve las advertencias en rojo para continuar.' : '';
+    $('#footerExportTip').classList.toggle('hidden', currentStep !== 5);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* NAVEGACIÓN                                                        */
+  /* ---------------------------------------------------------------- */
+
+  function goToStep(step) {
+    currentStep = step;
+    $all('.step-panel').forEach((p) => p.classList.add('hidden'));
+    $('#panel-' + step).classList.remove('hidden');
+    renderStepNav();
+    updateFooter();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('#btnAtras').addEventListener('click', () => {
+    if (currentStep > 1) goToStep(currentStep - 1);
+  });
+  $('#btnSiguiente').addEventListener('click', () => {
+    if (currentStep < 5) {
+      goToStep(currentStep + 1);
+    } else {
+      S.guardarLocal(plan);
+      S.exportarJSON(plan);
+    }
+  });
+  $all('.step-item').forEach((item) => {
+    item.addEventListener('click', () => goToStep(Number(item.dataset.step)));
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* PASO 1: INVERSIONES                                               */
+  /* ---------------------------------------------------------------- */
+
+  function renderActivos() {
+    const cont = $('#tablaActivos');
+    if (plan.inversiones.activos.length === 0) {
+      cont.innerHTML = '<div class="footer-hint">Aún no hay activos agregados.</div>';
+      return;
+    }
+    cont.innerHTML =
+      '<div class="dyn-header"><span>Concepto</span><span>Monto</span><span></span><span></span></div>' +
+      plan.inversiones.activos
+        .map(
+          (item, i) => `
+      <div class="dyn-row" data-index="${i}">
+        <input type="text" class="activo-nombre" value="${item.nombre || ''}" placeholder="Ej: Mobiliario" />
+        <input type="number" min="0" class="activo-monto input-money" value="${item.monto || 0}" />
+        <span></span>
+        <button class="btn-remove-row" data-remove="${i}" title="Eliminar">✕</button>
+      </div>`
+        )
+        .join('');
+
+    $all('.activo-nombre', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.inversiones.activos[i].nombre = input.value;
+        recalcAndRender();
+      });
+    });
+    $all('.activo-monto', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.inversiones.activos[i].monto = Number(input.value) || 0;
+        recalcAndRender();
+      });
+    });
+    $all('[data-remove]', cont).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        plan.inversiones.activos.splice(Number(btn.dataset.remove), 1);
+        renderActivos();
+        recalcAndRender();
+      });
+    });
+  }
+
+  $('#btnAddActivo').addEventListener('click', () => {
+    plan.inversiones.activos.push({ nombre: '', monto: 0 });
+    renderActivos();
+    recalcAndRender();
+  });
+
+  function bindSimpleField(id, getPath, setPath, isFloat) {
+    const el = $('#' + id);
+    el.value = getPath();
+    el.addEventListener('input', () => {
+      setPath(isFloat ? Number(el.value) || 0 : el.value);
+      recalcAndRender();
+    });
+  }
+
+  function initPaso1Fields() {
+    $('#vidaUtilAnios').value = plan.inversiones.vidaUtilAnios || 0;
+    $('#vidaUtilAnios').addEventListener('input', (e) => {
+      plan.inversiones.vidaUtilAnios = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+
+    const g = plan.inversiones.gastosInicio;
+    const map = {
+      stockInicial: 'stockInicial',
+      gastosConstitucion: 'gastosConstitucion',
+      gastosLanzamiento: 'gastosLanzamiento',
+      otrosGastos: 'otrosGastos',
+      fondoImprevistos: 'fondoImprevistos',
+    };
+    Object.keys(map).forEach((id) => {
+      const el = $('#' + id);
+      el.value = g[map[id]] || 0;
+      el.addEventListener('input', () => {
+        g[map[id]] = Number(el.value) || 0;
+        recalcAndRender();
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* PASO 2: FINANCIACIÓN                                              */
+  /* ---------------------------------------------------------------- */
+
+  function initPaso2Fields() {
+    const f = plan.financiacion;
+    $('#aportacionesSocios').value = f.aportacionesSocios || 0;
+    $('#prestamo').value = f.prestamo || 0;
+    $('#anios').value = f.anios || 0;
+    $('#tipoInteres').value = (f.tipoInteres || 0) * 100;
+
+    $('#aportacionesSocios').addEventListener('input', (e) => {
+      f.aportacionesSocios = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#prestamo').addEventListener('input', (e) => {
+      f.prestamo = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#anios').addEventListener('input', (e) => {
+      f.anios = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#tipoInteres').addEventListener('input', (e) => {
+      f.tipoInteres = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* PASO 3: GASTOS                                                    */
+  /* ---------------------------------------------------------------- */
+
+  function renderGastosOp() {
+    const cont = $('#tablaGastosOp');
+    cont.innerHTML =
+      '<div class="dyn-header"><span>Concepto</span><span>Mensual ($)</span><span>Variación anual (%)</span><span></span></div>' +
+      plan.gastos.operativos
+        .map(
+          (item, i) => `
+      <div class="dyn-row" data-index="${i}">
+        <input type="text" class="gasto-nombre" value="${item.nombre || ''}" placeholder="Ej: Arriendo" />
+        <input type="number" min="0" class="gasto-mensual input-money" value="${item.mensual || 0}" />
+        <input type="number" step="0.1" class="gasto-variacion input-small" value="${((item.variacion || 0) * 100).toFixed(1)}" />
+        <button class="btn-remove-row" data-remove="${i}" title="Eliminar">✕</button>
+      </div>`
+        )
+        .join('');
+
+    $all('.gasto-nombre', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.gastos.operativos[i].nombre = input.value;
+        recalcAndRender();
+      });
+    });
+    $all('.gasto-mensual', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.gastos.operativos[i].mensual = Number(input.value) || 0;
+        recalcAndRender();
+      });
+    });
+    $all('.gasto-variacion', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.gastos.operativos[i].variacion = (Number(input.value) || 0) / 100;
+        recalcAndRender();
+      });
+    });
+    $all('[data-remove]', cont).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        plan.gastos.operativos.splice(Number(btn.dataset.remove), 1);
+        renderGastosOp();
+        recalcAndRender();
+      });
+    });
+  }
+
+  $('#btnAddGasto').addEventListener('click', () => {
+    plan.gastos.operativos.push({ nombre: '', mensual: 0, variacion: 0.05 });
+    renderGastosOp();
+    recalcAndRender();
+  });
+
+  function renderEmpleadosPorAnio() {
+    const cont = $('#empleadosPorAnio');
+    const arr = plan.gastos.personal.empleadosPorAnio;
+    cont.innerHTML = window.MiniPlanCalc
+      .range(5)
+      .map((i) => `<label>${anioLabel(i)}<input type="number" min="0" class="empleado-input" data-i="${i}" value="${arr[i] || 0}" /></label>`)
+      .join('');
+    $all('.empleado-input', cont).forEach((input) => {
+      input.addEventListener('input', () => {
+        arr[Number(input.dataset.i)] = Number(input.value) || 0;
+        recalcAndRender();
+      });
+    });
+  }
+
+  function initPaso3Fields() {
+    const p = plan.gastos.personal;
+    $('#sueldoMensual').value = p.sueldoMensual || 0;
+    $('#variacionSueldoAnual').value = (p.variacionSueldoAnual || 0) * 100;
+    $('#pctCosteEmpresa').value = (p.pctCosteEmpresa || 0) * 100;
+
+    $('#sueldoMensual').addEventListener('input', (e) => {
+      p.sueldoMensual = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#variacionSueldoAnual').addEventListener('input', (e) => {
+      p.variacionSueldoAnual = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+    $('#pctCosteEmpresa').addEventListener('input', (e) => {
+      p.pctCosteEmpresa = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* PASO 4: VENTAS                                                    */
+  /* ---------------------------------------------------------------- */
+
+  function renderProductos() {
+    const cont = $('#tablaProductos');
+    if (plan.ventas.productos.length === 0) {
+      cont.innerHTML = '<div class="footer-hint">Aún no hay productos agregados.</div>';
+      return;
+    }
+    cont.innerHTML =
+      '<div class="dyn-header productos"><span>Producto / Servicio</span><span>Precio ($)</span><span>Margen bruto (%)</span><span>Unidades año 1</span><span></span></div>' +
+      plan.ventas.productos
+        .map(
+          (p, i) => `
+      <div class="dyn-row productos" data-index="${i}">
+        <input type="text" class="prod-nombre" value="${p.nombre || ''}" placeholder="Ej: Servicio de consultoría" />
+        <input type="number" min="0" class="prod-precio input-money" value="${p.precio || 0}" />
+        <input type="number" min="0" max="100" step="0.1" class="prod-margen input-small" value="${((p.margenPct || 0) * 100).toFixed(1)}" />
+        <input type="number" min="0" class="prod-unidades input-small" value="${p.unidades || 0}" />
+        <button class="btn-remove-row" data-remove="${i}" title="Eliminar">✕</button>
+      </div>`
+        )
+        .join('');
+
+    $all('.prod-nombre', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.ventas.productos[i].nombre = input.value;
+        recalcAndRender();
+      });
+    });
+    $all('.prod-precio', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.ventas.productos[i].precio = Number(input.value) || 0;
+        recalcAndRender();
+      });
+    });
+    $all('.prod-margen', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.ventas.productos[i].margenPct = (Number(input.value) || 0) / 100;
+        recalcAndRender();
+      });
+    });
+    $all('.prod-unidades', cont).forEach((input, i) => {
+      input.addEventListener('input', () => {
+        plan.ventas.productos[i].unidades = Number(input.value) || 0;
+        recalcAndRender();
+      });
+    });
+    $all('[data-remove]', cont).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        plan.ventas.productos.splice(Number(btn.dataset.remove), 1);
+        renderProductos();
+        recalcAndRender();
+      });
+    });
+  }
+
+  $('#btnAddProducto').addEventListener('click', () => {
+    plan.ventas.productos.push({ nombre: '', precio: 0, margenPct: 0.5, unidades: 0 });
+    renderProductos();
+    recalcAndRender();
+  });
+
+  const CRECIMIENTO_SUGERIDO = [0.2, 0.15, 0.12, 0.1];
+
+  function renderMetaCrecimiento() {
+    const cont = $('#metaCrecimiento');
+    const meta = plan.ventas.metaCrecimientoUnidades || [0, 0, 0, 0];
+    cont.innerHTML = window.MiniPlanCalc
+      .range(4)
+      .map(
+        (i) => `<label>${anioLabel(i + 1)} vs ${anioLabel(i)}<input type="number" step="0.1" min="-100" class="meta-crec-input" data-i="${i}" value="${((meta[i] || 0) * 100).toFixed(1)}" /></label>`
+      )
+      .join('');
+    $all('.meta-crec-input', cont).forEach((input) => {
+      input.addEventListener('input', () => {
+        plan.ventas.metaCrecimientoUnidades[Number(input.dataset.i)] = (Number(input.value) || 0) / 100;
+        recalcAndRender();
+      });
+    });
+  }
+
+  function initPaso4Fields() {
+    $('#variacionPrecioAnual').value = (plan.ventas.variacionPrecioAnual || 0) * 100;
+    $('#variacionPrecioAnual').addEventListener('input', (e) => {
+      plan.ventas.variacionPrecioAnual = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+
+    renderMetaCrecimiento();
+    $('#btnSugerirCrecimiento').addEventListener('click', () => {
+      plan.ventas.metaCrecimientoUnidades = CRECIMIENTO_SUGERIDO.slice();
+      renderMetaCrecimiento();
+      recalcAndRender();
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* PASO 5: RESULTADOS                                                */
+  /* ---------------------------------------------------------------- */
+
+  function initPaso5Fields() {
+    $('#tasaImpuesto').value = (plan.resultados.tasaImpuesto || 0) * 100;
+    $('#diasCobro').value = plan.cashflow.diasCobro || 0;
+    $('#diasPago').value = plan.cashflow.diasPago || 0;
+    $('#pctDividendos').value = (plan.cashflow.pctDividendos || 0) * 100;
+
+    $('#tasaImpuesto').addEventListener('input', (e) => {
+      plan.resultados.tasaImpuesto = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+    $('#diasCobro').addEventListener('input', (e) => {
+      plan.cashflow.diasCobro = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#diasPago').addEventListener('input', (e) => {
+      plan.cashflow.diasPago = Number(e.target.value) || 0;
+      recalcAndRender();
+    });
+    $('#pctDividendos').addEventListener('input', (e) => {
+      plan.cashflow.pctDividendos = (Number(e.target.value) || 0) / 100;
+      recalcAndRender();
+    });
+  }
+
+  function rowHtml(label, values, opts) {
+    opts = opts || {};
+    const cells = values
+      .map((v) => `<td class="${opts.negativeClass && v < 0 ? 'negative-cell' : ''}">${opts.money !== false ? V.money(v) : v}</td>`)
+      .join('');
+    return `<tr class="${opts.total ? 'total-row' : ''}"><td>${label}</td>${cells}</tr>`;
+  }
+
+  function buildPrintView() {
+    const anios = window.MiniPlanCalc.range(5).map(anioLabel);
+    const head = `<thead><tr><th></th>${anios.map((a) => `<th>${a}</th>`).join('')}</tr></thead>`;
+    const r = calc.resultados;
+    const cf = calc.cashflow;
+    const bal = calc.balance;
+    const fechaHoy = new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const pgBody = [
+      rowHtml('Total Ventas', r.totalVentas),
+      rowHtml('Coste de Ventas', r.costeVentas.map((v) => -v)),
+      rowHtml('Margen Bruto', r.margenBruto, { total: true }),
+      rowHtml('Gastos de Personal', r.gastosPersonal.map((v) => -v)),
+      rowHtml('Gastos Corrientes', r.gastosCorrientes.map((v) => -v)),
+      rowHtml('Gastos de establecimiento (año 1)', r.gastosEstablecimiento.map((v) => -v)),
+      rowHtml('EBITDA', r.ebitda, { total: true }),
+      rowHtml('Amortizaciones', r.amortizaciones.map((v) => -v)),
+      rowHtml('EBIT', r.ebit),
+      rowHtml('Gastos financieros (intereses)', r.gastosFinancieros.map((v) => -v)),
+      rowHtml('Resultado antes de impuestos (BAI)', r.bai),
+      rowHtml('Impuesto a la renta', r.impuesto.map((v) => -v)),
+      rowHtml('RESULTADO NETO', r.resultadoNeto, { total: true }),
+    ].join('');
+
+    const cfBody = [
+      rowHtml('Saldo al inicio del año', cf.filas.map((f) => f.saldoInicio)),
+      rowHtml('+ Resultado neto', cf.filas.map((f) => f.resultadoNeto)),
+      rowHtml('+ Amortización de activos', cf.filas.map((f) => f.amortizacionActivo)),
+      rowHtml('− Amortización del préstamo (capital)', cf.filas.map((f) => -f.amortizacionPrestamo)),
+      rowHtml('− Variación crédito a clientes', cf.filas.map((f) => -f.variacionClientes)),
+      rowHtml('+ Variación crédito de proveedores', cf.filas.map((f) => f.variacionProveedores)),
+      rowHtml('− Variación de existencias (stock)', cf.filas.map((f) => -f.variacionExistencias)),
+      rowHtml('− Dividendos repartidos', cf.filas.map((f) => -f.dividendos)),
+      rowHtml('Flujo neto del año', cf.filas.map((f) => f.flujoNetoAnio), { total: true }),
+      rowHtml('Saldo de caja al final del año', cf.filas.map((f) => f.saldoFin), { total: true }),
+    ].join('');
+
+    const balBody = [
+      rowHtml('Activo no corriente', bal.filas.map((f) => f.activoNoCorriente)),
+      rowHtml('Existencias', bal.filas.map((f) => f.existencias)),
+      rowHtml('Realizable (clientes)', bal.filas.map((f) => f.realizable)),
+      rowHtml('Disponible (caja)', bal.filas.map((f) => f.disponible)),
+      rowHtml('TOTAL ACTIVO', bal.filas.map((f) => f.totalActivo), { total: true }),
+      rowHtml('Patrimonio neto', bal.filas.map((f) => f.patrimonioNeto)),
+      rowHtml('Pasivo no corriente (deuda largo plazo)', bal.filas.map((f) => f.pasivoNoCorriente)),
+      rowHtml('Pasivo corriente (proveedores + deuda c/p)', bal.filas.map((f) => f.pasivoCorriente)),
+      rowHtml('TOTAL PATRIMONIO + PASIVO', bal.filas.map((f) => f.totalPatrimonioPasivo), { total: true }),
+    ].join('');
+
+    const productos = (plan.ventas.productos || []).map((p) => p.nombre).filter(Boolean).join(', ') || '—';
+    const informeHtml = $('#informeResumen').innerHTML;
+    const informeSections = $all('.informe-section')
+      .map((sec) => sec.outerHTML)
+      .join('');
+
+    $('#printView').innerHTML = `
+      <div class="print-header">
+        <h1>${plan.meta.nombreNegocio || 'Plan de Negocio'}</h1>
+        <p class="print-date">MiniPlan de Negocio — generado el ${fechaHoy}</p>
+      </div>
+
+      <h2>Resumen de supuestos</h2>
+      <div class="print-summary-grid">
+        <div>Inversión total prevista: <strong>${V.money(calc.inversiones.totalInversion)}</strong></div>
+        <div>Financiación total: <strong>${V.money(calc.financiacion.totalFinanciacion)}</strong> (${(calc.financiacion.coberturaPct * 100).toFixed(0)}% de cobertura)</div>
+        <div>Gastos totales año 1: <strong>${V.money(calc.gastos.totalGastosPorAnio[0])}</strong></div>
+        <div>Ventas totales año 1: <strong>${V.money(calc.ventas.totalVentasPorAnio[0])}</strong></div>
+        <div>Productos / servicios: <strong>${productos}</strong></div>
+        <div>Horizonte: <strong>${anioLabel(0)}–${anioLabel(4)}</strong></div>
+      </div>
+
+      <h2>Pérdidas y Ganancias previstas</h2>
+      <table>${head}<tbody>${pgBody}</tbody></table>
+
+      <h2>Cash Flow estimado</h2>
+      <table>${head}<tbody>${cfBody}</tbody></table>
+
+      <h2>Balances previsionales</h2>
+      <table>${head}<tbody>${balBody}</tbody></table>
+
+      <h2>Resumen</h2>
+      <div class="print-summary-grid">${informeHtml}</div>
+
+      <div class="print-informe">${informeSections}</div>
+    `;
+  }
+
+  function renderTablasResultados() {
+    const anios = window.MiniPlanCalc.range(5).map(anioLabel);
+    const head = `<thead><tr><th></th>${anios.map((a) => `<th>${a}</th>`).join('')}</tr></thead>`;
+
+    const r = calc.resultados;
+    const pgRows = [
+      ['Total Ventas', r.totalVentas],
+      ['Coste de Ventas', r.costeVentas.map((v) => -v)],
+      ['Margen Bruto', r.margenBruto, { total: true }],
+      ['Gastos de Personal', r.gastosPersonal.map((v) => -v)],
+      ['Gastos Corrientes', r.gastosCorrientes.map((v) => -v)],
+      ['Gastos de establecimiento (año 1)', r.gastosEstablecimiento.map((v) => -v)],
+      ['EBITDA', r.ebitda, { total: true }],
+      ['Amortizaciones', r.amortizaciones.map((v) => -v)],
+      ['EBIT', r.ebit],
+      ['Gastos financieros (intereses)', r.gastosFinancieros.map((v) => -v)],
+      ['Resultado antes de impuestos (BAI)', r.bai],
+      ['Impuesto a la renta', r.impuesto.map((v) => -v)],
+      ['RESULTADO NETO', r.resultadoNeto, { total: true }],
+    ];
+    const pgBody = pgRows.map(([label, values, opts]) => rowHtml(label, values, opts)).join('');
+    $('#tablaPG').innerHTML = head + '<tbody>' + pgBody + '</tbody>';
+    $all('#tablaPG tbody tr').forEach((tr, idx) => {
+      const rowValues = pgRows[idx][1];
+      $all('td', tr).slice(1).forEach((td, i) => {
+        if (rowValues[i] < 0) td.classList.add('negative-cell');
+      });
+    });
+
+    const cf = calc.cashflow;
+    const cfBody = [
+      rowHtml('Saldo al inicio del año', cf.filas.map((f) => f.saldoInicio)),
+      rowHtml('+ Resultado neto', cf.filas.map((f) => f.resultadoNeto)),
+      rowHtml('+ Amortización de activos', cf.filas.map((f) => f.amortizacionActivo)),
+      rowHtml('− Amortización del préstamo (capital)', cf.filas.map((f) => -f.amortizacionPrestamo)),
+      rowHtml('− Variación crédito a clientes', cf.filas.map((f) => -f.variacionClientes)),
+      rowHtml('+ Variación crédito de proveedores', cf.filas.map((f) => f.variacionProveedores)),
+      rowHtml('− Variación de existencias (stock)', cf.filas.map((f) => -f.variacionExistencias)),
+      rowHtml('− Dividendos repartidos', cf.filas.map((f) => -f.dividendos)),
+      rowHtml('Flujo neto del año', cf.filas.map((f) => f.flujoNetoAnio), { total: true }),
+      rowHtml('Saldo de caja al final del año', cf.filas.map((f) => f.saldoFin), { total: true }),
+    ].join('');
+    $('#tablaCF').innerHTML = head + '<tbody>' + cfBody + '</tbody>';
+
+    const bal = calc.balance;
+    const balBody = [
+      rowHtml('Activo no corriente', bal.filas.map((f) => f.activoNoCorriente)),
+      rowHtml('Existencias', bal.filas.map((f) => f.existencias)),
+      rowHtml('Realizable (clientes)', bal.filas.map((f) => f.realizable)),
+      rowHtml('Disponible (caja)', bal.filas.map((f) => f.disponible)),
+      rowHtml('TOTAL ACTIVO', bal.filas.map((f) => f.totalActivo), { total: true }),
+      rowHtml('Patrimonio neto', bal.filas.map((f) => f.patrimonioNeto)),
+      rowHtml('Pasivo no corriente (deuda largo plazo)', bal.filas.map((f) => f.pasivoNoCorriente)),
+      rowHtml('Pasivo corriente (proveedores + deuda c/p)', bal.filas.map((f) => f.pasivoCorriente)),
+      rowHtml('TOTAL PATRIMONIO + PASIVO', bal.filas.map((f) => f.totalPatrimonioPasivo), { total: true }),
+      rowHtml('Diferencia (debe ser 0)', bal.filas.map((f) => f.diferencia)),
+    ].join('');
+    $('#tablaBal').innerHTML = head + '<tbody>' + balBody + '</tbody>';
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* TOOLBAR: nombre, año, tema, exportar/importar/reset               */
+  /* ---------------------------------------------------------------- */
+
+  function initToolbar() {
+    $('#nombreNegocio').value = plan.meta.nombreNegocio || '';
+    $('#nombreNegocio').addEventListener('input', (e) => {
+      plan.meta.nombreNegocio = e.target.value;
+      recalcAndRender();
+    });
+
+    $('#btnExportar').addEventListener('click', () => {
+      S.guardarLocal(plan);
+      S.exportarJSON(plan);
+    });
+
+    $('#btnExportarPDF').addEventListener('click', () => {
+      buildPrintView();
+      window.print();
+    });
+
+    $('#btnImportar').addEventListener('click', () => $('#inputImportar').click());
+    $('#inputImportar').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        plan = await S.importarJSON(file);
+        rebuildAll();
+      } catch (err) {
+        await alertDialog(err.message);
+      }
+      e.target.value = '';
+    });
+
+    $('#btnNuevo').addEventListener('click', async () => {
+      const ok = await confirmDialog('¿Crear un nuevo plan? Se perderán los datos no exportados.');
+      if (!ok) return;
+      plan = S.planPorDefecto();
+      rebuildAll();
+    });
+
+    $('#btnEjemplo').addEventListener('click', async () => {
+      const ok = await confirmDialog('¿Cargar el plan de ejemplo? Se perderán los datos actuales no exportados.');
+      if (!ok) return;
+      plan = S.planEjemplo();
+      rebuildAll();
+    });
+
+    const themeBtn = $('#btnTema');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    function effectiveTheme() {
+      const attr = document.documentElement.getAttribute('data-theme');
+      if (attr === 'light' || attr === 'dark') return attr;
+      return prefersDark ? 'dark' : 'light';
+    }
+
+    const savedTheme = localStorage.getItem('miniplan_theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    themeBtn.textContent = effectiveTheme() === 'dark' ? '☀️' : '🌙';
+    themeBtn.addEventListener('click', () => {
+      const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('miniplan_theme', next);
+      themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* INIT / REBUILD                                                    */
+  /* ---------------------------------------------------------------- */
+
+  function rebuildAll() {
+    renderActivos();
+    initPaso1Fields();
+    initPaso2Fields();
+    renderGastosOp();
+    renderEmpleadosPorAnio();
+    initPaso3Fields();
+    renderProductos();
+    initPaso4Fields();
+    initPaso5Fields();
+    $('#nombreNegocio').value = plan.meta.nombreNegocio || '';
+    goToStep(1);
+    recalcAndRender();
+  }
+
+  try {
+    initToolbar();
+    rebuildAll();
+  } catch (e) {
+    // Última red de seguridad: si el plan guardado quedó en un estado que
+    // igual rompe el render (p.ej. tipos de datos inesperados dentro de un
+    // array), no dejar la app muerta con los botones sin funcionar — volver
+    // a un plan por defecto y reintentar el arranque completo.
+    console.error('Error al cargar el plan guardado, se reinicia a un plan por defecto:', e);
+    plan = S.planPorDefecto();
+    initToolbar();
+    rebuildAll();
+  }
+})();
+
+  </script>
+</body>
+</html>
