@@ -76,7 +76,7 @@ collections:
 
   # ── PODCAST ───────────────────────────────────
   - name: "podcast"
-    label: "🎙️ Podcast — A Prueba de Quiebra"
+    label: "🎙️ Podcast — El Precio del Éxito"
     folder: "content/podcast"
     create: true
     slug: "ep{{fields.numero}}-{{slug}}"

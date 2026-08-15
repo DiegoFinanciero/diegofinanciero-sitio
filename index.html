@@ -448,6 +448,9 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
 .ep-info p{font-size:.8rem;color:var(--gray);line-height:1.5}
 .ep-meta{text-align:right;font-size:.76rem;color:var(--gray);white-space:nowrap}
 .ep-badge{display:block;background:rgba(255,66,77,.1);color:#FF424D;border:1px solid rgba(255,66,77,.2);border-radius:100px;padding:.15rem .55rem;font-size:.66rem;font-weight:700;margin-bottom:.35rem;text-align:center}
+a.ep-card{color:inherit;text-decoration:none}
+.ep-yt{display:inline-block;background:rgba(255,0,0,.1);color:#FF4D4D;border:1px solid rgba(255,0,0,.25);border-radius:100px;padding:.35rem .8rem;font-size:.7rem;font-weight:700;transition:all .2s}
+.ep-card:hover .ep-yt{background:rgba(255,0,0,.18);color:var(--white);border-color:rgba(255,0,0,.45)}
 .soon-banner{margin:2rem 0;background:rgba(255,209,102,.05);border:1px solid rgba(255,209,102,.15);border-radius:12px;padding:2rem;text-align:center}
 .soon-banner h3{font-family:'Montserrat',sans-serif;font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:.4rem}
 .soon-banner p{color:var(--gray);font-size:.88rem}
@@ -519,7 +522,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
   .fullbleed{height:auto;aspect-ratio:16/9}
   footer{flex-direction:column;align-items:flex-start}
   .ep-card{grid-template-columns:48px 1fr}
-  .ep-meta{display:none}
+  .ep-meta{grid-column:2;text-align:left}
   .pod-cta-box{flex-direction:column}
   .tools-grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -864,15 +867,15 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
     <div class="pod-hero-pattern"></div>
     <div class="pod-hero-art">
       <div class="pod-cover">
-        <div class="pod-cover-logo">🎙️<br>A Prueba<br>de Quiebra<small>con Diego Financiero</small></div>
+        <div class="pod-cover-logo">🎙️<br>El Precio<br>del Éxito<small>con Diego Financiero</small></div>
       </div>
       <div class="pod-play">▶</div>
     </div>
     <div class="pod-hero-content">
-      <div class="pod-label">Podcast · En producción</div>
-      <h1 class="display-1 reveal">A Prueba<br>de Quiebra.</h1>
-      <p class="pod-tagline reveal delay-1">// El podcast de los que resistieron y ganaron //</p>
-      <p class="reveal delay-2" style="color:var(--gray);line-height:1.75;font-size:.92rem;max-width:480px">Conversaciones reales con emprendedores que sobrevivieron crisis financieras, deudas, malos socios y el SII — y salieron adelante. Sin filtro.</p>
+      <div class="pod-label">Podcast · Disponible</div>
+      <h1 class="display-1 reveal">El Precio<br>del Éxito.</h1>
+      <p class="pod-tagline reveal delay-1">// Conversaciones sobre el precio real de emprender //</p>
+      <p class="reveal delay-2" style="color:var(--gray);line-height:1.75;font-size:.92rem;max-width:480px">Conversaciones reales sobre lo que cuesta emprender: dejar la estabilidad, financiar un negocio, y todo lo que no se ve en redes sociales.</p>
       <div class="hero-actions reveal delay-3">
         <button class="btn btn-blue btn-lg" onclick="document.querySelector('.episodes-section').scrollIntoView({behavior:'smooth'})">🎙️ Escuchar episodios</button>
         <button class="btn btn-outline btn-lg" onclick="goTo('home','#contacto')">📩 Ser invitado</button>
@@ -887,14 +890,10 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:3rem 6%;display:flex;f
   </div>
   <div class="episodes-section">
     <h2 class="display-3 reveal" style="margin-bottom:2rem">Episodios</h2>
-    <div class="soon-banner reveal delay-1">
-      <h3>🚀 Lanzamiento próximo</h3>
-      <p>Los primeros episodios están en producción. Síguenos en redes para ser el primero en enterarte.</p>
-    </div>
     <div class="ep-list" id="ep-list-dynamic">
-      <div class="ep-card reveal" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">01</div><div class="ep-info"><h4>El día que lo perdí todo y volví a empezar</h4><p>Sebastián Morales cuenta cómo sobrevivió una quiebra técnica en su empresa de logística en 2021.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~42 min</div></div>
-      <div class="ep-card reveal delay-1" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">02</div><div class="ep-info"><h4>Cómo negocié con el SII y salí ganando</h4><p>Una dueña de restaurant revela cómo negoció una deuda millonaria y salvó su negocio.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~38 min</div></div>
-      <div class="ep-card reveal delay-2" onclick="showPodcastSoon()" style="cursor:pointer"><div class="ep-n">03</div><div class="ep-info"><h4>El socio que desapareció y la empresa que sobrevivió</h4><p>Emprendedor del retail cuenta cómo recuperó su empresa después de que su socio se llevara la caja.</p></div><div class="ep-meta"><span class="ep-badge">Próximamente</span>~51 min</div></div>
+      <a class="ep-card reveal" href="https://youtu.be/KPLML0wEcyk" target="_blank" rel="noopener"><div class="ep-n">01</div><div class="ep-info"><h4>Haría lo que fuera para no volver a ser empleado</h4><p>Diego cuenta por qué decidió dejar la estabilidad de un trabajo fijo para nunca más depender de un jefe.</p></div><div class="ep-meta"><span class="ep-yt">▶️ Ver en YouTube</span></div></a>
+      <a class="ep-card reveal delay-1" href="https://youtu.be/ByjdHhx6vl8" target="_blank" rel="noopener"><div class="ep-n">02</div><div class="ep-info"><h4>¿Por qué los bancos rechazan a las pymes?</h4><p>Junto a Mauricio Santibáñez, conversan sobre los obstáculos que enfrentan las pymes chilenas para acceder a financiamiento bancario.</p></div><div class="ep-meta"><span class="ep-yt">▶️ Ver en YouTube</span></div></a>
+      <a class="ep-card reveal delay-2" href="https://youtube.com/watch?v=SkDzHqdP1UM" target="_blank" rel="noopener"><div class="ep-n">03</div><div class="ep-info"><h4>Dejé un trabajo estable por emprender: el precio de ser tu propio jefe</h4><p>La historia de Diego sobre las implicancias financieras y personales de dejar la estabilidad laboral para emprender.</p></div><div class="ep-meta"><span class="ep-yt">▶️ Ver en YouTube</span></div></a>
     </div>
   </div>
   <div class="pod-cta">
@@ -1100,26 +1099,5 @@ if(window.netlifyIdentity){
 }
 </script>
 
-<!-- PODCAST SOON TOAST -->
-<div id="podcast-toast" style="
-  display:none;position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
-  background:rgba(255,66,77,0.95);color:#fff;
-  padding:.85rem 2rem;border-radius:100px;
-  font-family:Montserrat,sans-serif;font-weight:700;font-size:.9rem;
-  z-index:9999;box-shadow:0 8px 32px rgba(255,66,77,.4);
-  white-space:nowrap;pointer-events:none;
-  transition:opacity .3s;
-">🎙️ Episodio próximamente — ¡Síguenos para enterarte primero!</div>
-<script>
-function showPodcastSoon(){
-  const t=document.getElementById('podcast-toast');
-  t.style.display='block';t.style.opacity='1';
-  clearTimeout(window._podcastToastTimer);
-  window._podcastToastTimer=setTimeout(()=>{
-    t.style.opacity='0';
-    setTimeout(()=>t.style.display='none',300);
-  },3000);
-}
-</script>
 </body>
 </html>
