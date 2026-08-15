@@ -574,8 +574,101 @@ table td.negative-cell {
   .print-only .print-informe p, .print-only .print-informe li { font-size: 0.82rem; line-height: 1.45; }
 }
 </style>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
+<div id="authGateOverlay" style="position:fixed;inset:0;z-index:2147483647;background:linear-gradient(135deg,#1c2230,#2f5fdb);display:flex;align-items:center;justify-content:center;padding:24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:420px;width:100%;background:#ffffff;border-radius:14px;padding:36px 28px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.25);">
+    <div style="font-size:44px;margin-bottom:14px;">🔒</div>
+    <h1 style="margin:0 0 10px;font-size:1.3rem;color:#1c2230;">Inicia sesion para continuar</h1>
+    <p style="margin:0 0 24px;color:#626b7a;font-size:.95rem;line-height:1.5;">Para usar el MiniPlan de Negocio (gratis) necesitas iniciar sesion con tu cuenta de Google.</p>
+    <button id="authGateLoginBtn" type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 18px;border:none;border-radius:8px;background:#2f5fdb;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;">
+      Iniciar sesion con Google
+    </button>
+    <p id="authGateStatus" style="margin:16px 0 0;font-size:.85rem;color:#a5690a;display:none;"></p>
+  </div>
+</div>
+<div id="authGateUserBadge" style="display:none;position:fixed;top:10px;right:10px;z-index:2147483000;background:#1c2230;color:#fff;padding:6px 12px;border-radius:20px;font-size:.78rem;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.2);">
+  <span id="authGateUserEmail"></span>
+  <button id="authGateLogoutBtn" type="button" style="background:none;border:none;color:#9fb4ff;cursor:pointer;font-size:.78rem;padding:0;text-decoration:underline;">Cerrar sesion</button>
+</div>
+<script>
+(function () {
+  function showGate() {
+    var g = document.getElementById('authGateOverlay');
+    if (g) g.style.display = 'flex';
+    var badge = document.getElementById('authGateUserBadge');
+    if (badge) badge.style.display = 'none';
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function hideGate(user) {
+    var g = document.getElementById('authGateOverlay');
+    if (g) g.style.display = 'none';
+    document.documentElement.style.overflow = '';
+    var badge = document.getElementById('authGateUserBadge');
+    var emailEl = document.getElementById('authGateUserEmail');
+    if (badge && emailEl) {
+      var email = (user && user.email) || (user && user.user_metadata && user.user_metadata.full_name) || '';
+      emailEl.textContent = email ? ('Conectado como ' + email) : 'Conectado';
+      badge.style.display = 'flex';
+    }
+  }
+  function setStatus(msg) {
+    var s = document.getElementById('authGateStatus');
+    if (!s) return;
+    if (msg) { s.textContent = msg; s.style.display = 'block'; }
+    else { s.style.display = 'none'; }
+  }
+  function bindButtons() {
+    var loginBtn = document.getElementById('authGateLoginBtn');
+    var logoutBtn = document.getElementById('authGateLogoutBtn');
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function () {
+        if (window.netlifyIdentity) {
+          var g = document.getElementById('authGateOverlay');
+          if (g) g.style.display = 'none';
+          window.netlifyIdentity.open('login');
+        }
+      });
+    }
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        if (window.netlifyIdentity) window.netlifyIdentity.logout();
+      });
+    }
+  }
+  function waitForIdentity(retries) {
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function (user) {
+        if (user) hideGate(user); else showGate();
+      });
+      window.netlifyIdentity.on('login', function (user) {
+        hideGate(user);
+        window.netlifyIdentity.close();
+      });
+      window.netlifyIdentity.on('logout', function () {
+        showGate();
+      });
+      window.netlifyIdentity.on('error', function () {
+        setStatus('Ocurrio un error al iniciar sesion. Intenta nuevamente.');
+      });
+      window.netlifyIdentity.on('close', function () {
+        if (!window.netlifyIdentity.currentUser()) {
+          showGate();
+        }
+      });
+      return;
+    }
+    if (retries > 0) {
+      setTimeout(function () { waitForIdentity(retries - 1); }, 200);
+    } else {
+      setStatus('No se pudo cargar el sistema de acceso. Recarga la pagina.');
+    }
+  }
+  bindButtons();
+  waitForIdentity(50);
+})();
+</script>
   <header class="topbar">
     <div class="topbar-left">
       <span class="logo">📊 MiniPlan de Negocio</span>
